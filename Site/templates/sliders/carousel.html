@@ -1,0 +1,40 @@
+{% spaceless %}
+{% if slider %}
+<div id="carousel-{{ slider.id }}" class="carousel slide" data-bs-ride="carousel">
+  
+  <!-- Индикаторы (точки) -->
+  <div class="carousel-indicators">
+    {% for item in ordered_photos %}
+      <button type="button" 
+              data-bs-target="#carousel-{{ slider.id }}" 
+              data-bs-slide-to="{{ forloop.counter0 }}" 
+              {% if forloop.first %}class="active" aria-current="true"{% endif %} 
+              aria-label="Slide {{ forloop.counter }}">
+      </button>
+    {% endfor %}
+  </div>
+
+  <!-- Слайды -->
+  <div class="carousel-inner">
+    {% for item in ordered_photos %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        {% if item.photo.image %}
+          <img src="{{ item.photo.image.url }}" class="d-block w-100" alt="{{ item.photo.title }}">
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Кнопки управления -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ slider.id }}" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Предыдущий</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ slider.id }}" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Следующий</span>
+  </button>
+
+</div>
+{% endif %}
+{% endspaceless %}

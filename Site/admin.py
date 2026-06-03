@@ -1,0 +1,174 @@
+from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
+from . import views
+from django.urls import path
+from .models import Region, Project, BookTerritory, Club, RegionClubMembership, RegionBookTerritoryMembership, Photo, Slider, HtmlSnippet, SliderPhoto, News, StaticPage, Contest
+from django.template.loader import render_to_string
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
+
+
+# Register your models here.
+@admin.register(Region)
+class RegionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"region_url": ("title",)}
+    list_display = ("title", "is_active",)
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ("region", "year", "is_active")
+admin.site.register(BookTerritory)
+admin.site.register(Club)
+admin.site.register(RegionClubMembership)
+admin.site.register(RegionBookTerritoryMembership)
+@admin.register(Contest)
+class ContestAdmin(admin.ModelAdmin):
+    filter_horizontal = ('top', 'short_list')
+    fieldsets = (
+        (None, {
+            'fields': ('main_project', 'year', 'top', 'short_list', 'full_text')
+        }),
+        ('SEO', {
+            'classes': ('collapse',),
+            'fields': ('seo_title', 'seo_descriptor'),
+        }),
+    )
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ("title", "image")
+    list_per_page = 20
+    change_list_template = "admin/photo_change_list.html"
+
+    # Добавляем строку поиска. Поиск будет идти по названию фотографии.
+    search_fields = ("title",) 
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("multi_upload/", self.admin_site.admin_view(views.multi_upload_photos), name="multi_upload_photos"),
+        ]
+        return my_urls + urls
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["multi_upload_url"] = reverse("admin:multi_upload_photos")
+        return super().changelist_view(request, extra_context)
+
+
+
+@admin.register(HtmlSnippet)
+class HtmlSnippetAdmin(admin.ModelAdmin):
+    list_display = ("name", "get_shortcode", "internal_tag")
+    readonly_fields = ("get_shortcode",)
+
+
+# СЛАЙДЕР
+class SliderPhotoInline(admin.TabularInline):
+    model = SliderPhoto
+    extra = 1
+
+@admin.register(Slider)
+class SliderAdmin(admin.ModelAdmin):
+    # Поля, которые отображаются в списке всех слайдеров
+    list_display = ('name', 'project', 'photo_count', 'get_tag_for_insertion', 'is_active')
+    
+    # Делаем наши кастомные поля доступными для просмотра на странице редактирования
+    readonly_fields = ('get_tag_for_insertion', 'get_generated_html')
+    
+    inlines = [SliderPhotoInline]
+
+    # Красиво группируем поля на странице редактирования слайдера
+    fieldsets = (
+        ("Основная информация", {
+            'fields': ('name', 'project', 'internal_tag', 'is_active')
+        }),
+        ("Код и интеграция", {
+            # Выводим шорткод и сгенерированный HTML рядом
+            'fields': ('get_tag_for_insertion', 'get_generated_html'),
+        }),
+    )
+
+    def get_generated_html(self, obj):
+        """
+        Генерирует итоговый HTML-код карусели на основе шаблона
+        и выводит его в админке как отформатированный текст.
+        """
+        if not obj.pk:
+            return "Сохраните слайдер, чтобы сгенерировать HTML-код."
+
+        # 1. Получаем связанные фотографии слайдера в правильном порядке
+        ordered_photos = obj.sliderphoto_set.select_related('photo').order_by('order')
+
+        # 2. Рендерим шаблон слайдера в строку (используем тот же шаблон, что и на сайте)
+        html_content = render_to_string('sliders/carousel.html', {
+            'slider': obj,
+            'ordered_photos': ordered_photos
+        })
+
+        # 3. Экранируем спецсимволы (<, >, &), чтобы код отображался именно текстом,
+        # а не рендерился браузером как рабочая карусель внутри админки.
+        escaped_html = escape(html_content.strip())
+
+        # 4. Возвращаем стилизованный блок кода с темной темой (как в редакторах кода)
+        return mark_safe(
+            f'<pre style="'
+            f'background: #272822; '         # Темный фон (Monokai)
+            f'color: #f8f8f2; '              # Светлый текст
+            f'padding: 15px; '
+            f'border-radius: 6px; '
+            f'max-height: 350px; '           # Ограничиваем по высоте
+            f'overflow-y: auto; '            # Добавляем прокрутку, если кода много
+            f'font-family: Consolas, Monaco, monospace; '
+            f'font-size: 13px; '
+            f'line-height: 1.5; '
+            f'margin: 0;'
+            f'"><code>{escaped_html}</code></pre>'
+        )
+    
+    # Название колонки/поля в админке
+    get_generated_html.short_description = "Итоговый сгенерированный HTML-код"
+
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'is_active', 'created_at')
+    list_filter = ('category', 'is_active', 'created_at')
+    list_editable = ('is_active',)
+    search_fields = ('title', 'short_description', 'full_text')
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'short_description', 'full_text', 'category', 'is_active'),
+        }),
+        ('SEO', {
+            'fields': ('seo_title', 'seo_descriptor'),
+        }),
+        ('Изображения', {
+            'fields': ('image_16x10', 'image_1x1'),
+        }),
+        ('Даты', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+@admin.register(StaticPage)
+class StaticPageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active')
+    list_editable = ('is_active',)
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'short_description', 'full_text', 'is_active'),
+        }),
+        ('SEO', {
+            'classes': ('collapse',),
+            'fields': ('seo_title', 'seo_descriptor'),
+        }),
+        ('Изображения', {
+            'classes': ('collapse',),
+            'fields': ('image_16x10', 'image_1x1'),
+        }),
+    )
