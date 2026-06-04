@@ -2,8 +2,8 @@ from django.db import models
 import datetime
 from django.utils.text import slugify
 from django.utils.safestring import mark_safe
-from pytils.translit import slugify as pytils_slugify # Импортируем слаггер для кириллицы
-from ckeditor.fields import RichTextField # или откуда у вас RichTextField
+from pytils.translit import slugify as pytils_slugify
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 

@@ -7,4 +7,12 @@ static/
 venv/
 *.sh
 # Google Cloud Service Account credentials
-*.json
+steady-vine-396608*.json
+*.json.key
+*.json.credentials
+
+# Файлы данных БД
+db_data.json
+
+# Оставьте для возможных конфигурационных файлов
+# *.json
