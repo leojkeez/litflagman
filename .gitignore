@@ -14,5 +14,8 @@ steady-vine-396608*.json
 # Файлы данных БД
 db_data.json
 
+# VS Code
+.vscode/
+
 # Оставьте для возможных конфигурационных файлов
 # *.json
