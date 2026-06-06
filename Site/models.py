@@ -20,6 +20,14 @@ class Region(models.Model):
     seo_title = models.CharField("Тайтл СЕО", max_length=255)
     seo_description = models.TextField("Дескришен СЕО")
     right_column_text = models.TextField("Текстовое поле для вставки в любое место", blank=True, null=True)
+    svg_id = models.CharField(
+        "ID на карте (SVG ID)", 
+        max_length=100, 
+        blank=True, 
+        null=True, 
+        unique=True, 
+        help_text="Идентификатор региона в SVG-карте (например, PETERSBURG, VORONEZH)"
+    )
     is_active = models.BooleanField("Активна", default=True)
     coat_of_arms = models.ImageField("Герб", upload_to='regions/coats_of_arms/', blank=True, null=True)
 

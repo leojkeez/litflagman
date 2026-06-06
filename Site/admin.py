@@ -13,7 +13,8 @@ from django.utils.safestring import mark_safe
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"region_url": ("title",)}
-    list_display = ("title", "is_active",)
+    list_display = ("title", "svg_id", "is_active",)
+    search_fields = ("title", "svg_id",)
 
 
 @admin.register(Project)

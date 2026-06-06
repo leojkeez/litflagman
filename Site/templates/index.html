@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Главная — LitFlagman{% endblock %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+  <div class="col-lg-6 mb-4 mb-lg-0">
+    <span class="badge badge-gradient mb-3 px-3 py-2 rounded-pill fw-bold text-uppercase">Всероссийский конкурс</span>
+    <h1 class="hero-title fw-bold text-dark mb-4">Самый читающий регион</h1>
+    <p class="lead text-muted mb-4">Присоединяйтесь к масштабному конкурсу книжных проектов и инициатив, объединяющему всю страну в стремлении развивать культуру чтения.</p>
+    <div class="d-flex gap-3">
+      <a href="#" class="btn-main">Подать заявку</a>
+    </div>
+  </div>
+  <div class="col-lg-6 position-relative">
+    {% include 'includes/map.html' %}
+  </div>
+</div>
+
+<div class="row py-4">
+  <!-- Колонна 1: О конкурсе -->
+  <div class="col-lg-6 mb-5 mb-lg-0">
+    <h2 class="fw-bold mb-3">О конкурсе</h2>
+    <div class="divider-gradient mb-4"></div>
+    
+    <div class="banner-status mb-4">
+      <div class="p-4 bg-dark text-white rounded-3 d-flex align-items-center justify-content-between overflow-hidden position-relative">
+        <div class="position-relative z-1">
+          <span class="badge bg-danger mb-2">LIVE</span>
+          <h4 class="fw-bold mb-0">Статус конкурса: Прием заявок</h4>
+        </div>
+        <div class="banner-status-icon opacity-25">
+          <i class="bi bi-pencil-square display-1"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="read-more-container">
+      <div class="read-more-wrapper collapsed">
+        <div class="txt-wide">
+          <p>12 апреля стартовал Всероссийский конкурс «Самый читающий регион», в котором традиционно принимают участие все 89 областей, краев, республик и округов нашей страны.</p>
+          <p>Впервые конкурс состоялся в 2015 году — и это был настоящий вызов: до того никто не пытался сравнивать регионы по их успехам в продвижении книги и чтения. Сегодня, спустя 11 лет, «Самый читающий регион» стал не просто состязанием, а уникальной системой обмена опытом. Он превратился из рейтинга в экосистему, где не проигрывают, а перенимают, где не отстают, а догоняют и перегоняют, чтобы завтра самим стать примером.</p>
+          <p>По традиции каждый из субъектов Российской Федерации представит жюри свой наиболее значимый проект в сфере поддержки чтения. 2026 год объявлен Годом единства народов России, в связи с этим особое внимание жюри уделит проектам и мероприятиям, направленным на сохранение мира и согласия между гражданами, популяризацию русской самобытности и традиций всех национальностей, проживающих в нашей огромной стране. При выборе победителя также будут учтены инициативы региона по сохранению литературных традиций, статистика по книжной отрасли и состояние читательской инфраструктуры.</p>
+          <p>«На семнадцати миллионах квадратных километров Российской Федерации слышна речь на более чем двухстах семидесяти языках и диалектах. Но каждый народ России объединяют одни и те же книги, которые лежат на полках библиотек и магазинов от Калининградской области до Чукотки. Любовь к чтению остается для нашего общества одной из традиционных ценностей, создающих единое культурное пространство на территории многонациональной страны» – считает Председатель жюри конкурса, Президент Российского книжного союза Сергей Вадимович Степашин.</p>
+          <p>За 11 лет качество проектов выросло многократно. Если в первые годы жюри оценивало отдельные яркие акции, то сегодня регионы приходят с комплексными стратегиями. Разница между первым и десятым местом теперь измеряется нюансами. У всех 89 регионов есть сильные проекты. У всех есть понимание, что чтение – это не про досуг, а про единство страны. Поэтому, с каждым годом выбор победителя для жюри становится все более сложной задачей.</p>
+          <p>Прием заявок продлится с 12 апреля по 4 сентября 2026 года. Итоги конкурса подведут до конца октября. Победителю, удостоенному звания «Литературный флагман России», вручат комплект книг для пополнения библиотечных фондов, почетный диплом и памятный приз в виде летящего по волнам бронзового кораблика-книги. Также в течение последующего года у победителя появится возможность льготного участия в форумах и выставках, проводимых под эгидой Российского книжного союза. Кроме того, регион войдет в число членов «Клуба первых», задача которого – сохранение традиций творческого состязания и поддержка остальных участников в их стремлении к новым достижениям.</p>
+          <p>Регионам, ранее уже становившимся победителями, и в третий раз за последние пять лет вошедшим в короткий список Конкурса, присуждается почетный статус «Территория книги и чтения» и вручается специальный приз.</p>
+          <p>Новшеством этого года станет презентация всех участников на сайте Литфлагман.рф, который ждет масштабное обновление: к концу года на портале будет представлена информация о культурной и литературной жизни каждого региона страны.</p>
+        </div>
+      </div>
+      <button class="btn-main js-read-more d-lg-none">Читать далее</button>
+    </div>
+  </div>
+
+  <!-- Колонна 2: Медиа и Новости -->
+  <div class="col-lg-6">
+    <!-- Плеер Рутуб -->
+    <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow-sm mb-4">
+      
+      <iframe
+        width="720"
+        height="405"
+        src="https://rutube.ru/play/embed/414a2cbfe9664b13812f030c0ca66b3a"
+        style="border: none;"
+        allow="clipboard-write; autoplay"
+        allowFullScreen
+      ></iframe>
+    
+    
+    </div>
+
+    <!-- Два маленьких баннера -->
+    <div class="row g-3 mb-4">
+      <div class="col-6">
+        <div class="p-3 rounded-3 bg-light border text-center h-100 d-flex align-items-center justify-content-center">
+          <span class="small fw-bold">Клуб первых</span>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-3 rounded-3 bg-light border text-center h-100 d-flex align-items-center justify-content-center">
+          <span class="small fw-bold">Территория книги и чтения</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Новости конкурса -->
+    <div class="news-list mb-4">
+      <h5 class="fw-bold mb-3">Новости конкурса</h5>
+      {% for news in latest_news %}
+      <div class="news-item d-flex gap-3 mb-3 pb-3 border-bottom border-light-subtle">
+        {% if news.image_1x1 %}
+        <img src="{{ news.image_1x1.url }}" alt="{{ news.title }}" class="rounded-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">
+        {% else %}
+        <div class="bg-secondary-subtle rounded-3" style="width: 80px; height: 80px;"></div>
+        {% endif %}
+        <div>
+          <h6 class="fw-bold mb-1"><a href="#" class="text-dark text-decoration-none">{{ news.title }}</a></h6>
+          <p class="small text-muted mb-0">{{ news.short_description|truncatechars:80 }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-muted small">Новостей пока нет.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Кнопка все новости -->
+    <a href="#" class="btn-main w-50">Все новости</a>
+  </div>
+</div>
+
+<div class="row py-5">
+   <!-- Регионы -->
+  <div class="col-12">
+    <div class="bg-white p-5 rounded-3 shadow-sm border border-light-subtle">
+      <h2 class="fw-bold mb-4 text-center d-none d-lg-block">Список регионов</h2>
+      <div class="divider-gradient mx-auto mb-4 d-none d-lg-block"></div>
+
+      <!-- Поиск регионов (только для мобильных и планшетов) -->
+      <div class="row justify-content-center mb-5 d-lg-none">
+        <div class="col-md-8">
+          <div class="region-search-wrapper">
+            <input type="text" class="form-control js-region-search" placeholder="Поиск региона...">
+            <i class="bi bi-search search-icon"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="regions-collapsible-container js-regions-container">
+        <div class="row g-4 js-regions-list">
+          {% for column in region_columns %}
+          <div class="col-6 col-md-4 col-lg-2 js-region-column">
+            <ul class="list-unstyled mb-0 small">
+              {% for region in column %}
+              <li class="mb-2 js-region-item" data-name="{{ region.name|lower }}">
+                {% if region.url %}
+                  <a href="{{ region.url }}" class="text-muted text-decoration-none hover-purple transition-all fw-bold" style="color: var(--color-purple) !important;">{{ region.name }}</a>
+                {% else %}
+                  <span class="text-muted opacity-50">{{ region.name }}</span>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Кнопка развернуть (только для мобильных) -->
+        <div class="text-center mt-4 d-lg-none">
+          <button class="btn btn-link text-decoration-none js-regions-expand" style="color: var(--color-purple);">
+            <span>Показать все регионы</span>
+            <i class="bi bi-chevron-down ms-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row py-5 border-top border-light-subtle mt-4">
+  <!-- Организаторы конкурса -->
+  <div class="col-lg-8 mb-5 mb-lg-0">
+    <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-lg-start" style="letter-spacing: 0.1em;">Организаторы конкурса</h5>
+    <div class="d-flex flex-wrap justify-content-center justify-content-lg-start align-items-center gap-4 gap-xl-5">
+      <div class="organizer-item">
+        <img src="{% static 'partners/logo-rks.png' %}" alt="РКС" class="organizer-logo">
+        <span class="organizer-text">Российский книжный союз</span>
+      </div>
+      <div class="organizer-item">
+        <img src="{% static 'partners/logo-mc.png' %}" alt="Минцифры" class="organizer-logo">
+        <span class="organizer-text">Министерство цифрового развития, связи и массовых коммуникаций РФ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Генеральные партнеры -->
+  <div class="col-lg-4">
+    <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-lg-start" style="letter-spacing: 0.1em;">Генеральные партнеры</h5>
+    <div class="d-flex flex-wrap justify-content-center justify-content-lg-start align-items-center gap-4 gap-xl-5">
+      <img src="{% static 'partners/logo-uk.png' %}" alt="Университетская КНИГА" class="partner-logo" title="Университетская КНИГА">
+      <img src="{% static 'partners/logo-ki.png' %}" alt="Книжная индустрия" class="partner-logo" title="Книжная индустрия">
+    </div>
+  </div>
+</div>
+
+{% endblock %}

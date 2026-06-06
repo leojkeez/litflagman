@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Литфлагман{% endblock %}</title>
+  
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="py-2 py-lg-3">
+    <div class="container">
+      
+      <!-- Row 1: Logo + Text + Burger -->
+      <div class="row align-items-center">
+        <!-- Logo and Text -->
+        <div class="col-10 col-lg-4">
+          <a href="/" class="d-flex align-items-center text-dark text-decoration-none header-logo">
+            <img src="{% static 'logo.png' %}" alt="Логотип LitFlagman" class="img-fluid">
+            <span class="header-logo-text ms-2">Литфлагман</span>
+          </a>
+        </div>
+        
+        <!-- Burger for Mobile/Tablet -->
+        <div class="col-2 d-lg-none d-flex justify-content-end">
+          <button class="navbar-toggler collapsed border-0 p-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Переключатель навигации">
+            <div class="burger-icon-wrapper">
+              <i class="bi bi-list fs-1 text-dark icon-burger"></i>
+              <i class="bi bi-x-lg fs-2 text-dark icon-close"></i>
+            </div>
+          </button>
+        </div>
+
+        <!-- Search for Desktop (hidden on mobile in Row 1) -->
+        <div class="col-lg-8 d-none d-lg-flex justify-content-end">
+          <form class="d-flex header-search-form" role="search" style="max-width: 350px; width: 100%;">
+            <div class="input-group">
+              <input class="form-control search-input" type="search" placeholder="Поиск по сайту..." aria-label="Search" name="q">
+              <button class="btn search-btn" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Row 2: Search for Mobile/Tablet -->
+      <div class="row mt-3 d-lg-none">
+        <div class="col-12">
+          <form class="d-flex header-search-form w-100" role="search">
+            <div class="input-group">
+              <input class="form-control search-input" type="search" placeholder="Поиск по сайту..." aria-label="Search" name="q">
+              <button class="btn search-btn" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- STICKY MENU -->
+  <div class="nav-container-wrapper sticky-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light p-0">
+        <div class="container-fluid p-0">
+          <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav justify-content-between text-center position-relative my-0">
+              <li class="nav-item flex-fill">
+                <a class="nav-link text-uppercase" href="#">О конкурсе</a>
+              </li>
+              <li class="nav-item flex-fill">
+                <a class="nav-link text-uppercase" href="#">Участникам</a>
+              </li>
+              <li class="nav-item flex-fill">
+                <a class="nav-link text-uppercase" href="#">Итоги конкурсов</a>
+              </li>
+              <li class="nav-item flex-fill">
+                <a class="nav-link text-uppercase" href="#">100 проектов</a>
+              </li>
+              <li class="nav-item flex-fill">
+                <a class="nav-link text-uppercase" href="#">Фестиваль-форум</a>
+              </li>
+              
+              <!-- The 2px sliding line for desktop screens -->
+              <div class="nav-underline-bar d-none d-lg-block"></div>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="py-4">
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </main>
+
+  <!-- FOOTER (Standard with copyright, links, and info) -->
+  <footer class="py-5 text-muted">
+    <div class="container">
+      <div class="row">
+        <!-- Col 1: About / Copyright -->
+        <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+          <h5 class="text-dark fw-bold mb-3">Литфлагман</h5>
+          <p class="small mb-2">Свидетельство о регистрации средства массовой информации Эл №ФС77-63157. <br>Выдано Роскомнадзором 01 октября 2015 года.</p>
+          <div class="mb-3 mt-4">
+            <img src="{% static 'Logo_Mintsifry.png' %}" alt="Логотип Минцифры" style="max-width: 140px;" class="mb-3 d-block">
+            <p class="small mb-0">Сайт функционирует при финансовой поддержке Министерства цифрового развития, связи и массовых коммуникаций Российской Федерации.</p>
+          </div>
+          <p class="small text-muted mt-3 mb-0">Наш сайт использует файлы cookie для вашего максимального удобства. <br>Пользуясь сайтом, вы даете согласие с <a href="https://xn--80aaisobjj3bu.xn--p1ai/privacy-policy/" class="text-muted text-decoration-underline">политикой конфиденциальности</a>.</p>
+          <p class="small mt-3 mb-0">&copy;2018  Всероссийский конкурс «Самый читающий регион»</p>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="col-12 col-lg-3 mb-5 mb-lg-0">
+          <h5 class="text-dark fw-bold mb-3">Быстрые ссылки</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="#">Главная</a></li>
+            <li class="mb-2"><a href="#">О проекте</a></li>
+            <li class="mb-2"><a href="#">Регионы-участники</a></li>
+            <li class="mb-2"><a href="#">Новости проекта</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Contacts & Socials -->
+        <div class="col-12 col-lg-3">
+          <h5 class="text-dark fw-bold mb-3">Контакты</h5>
+          <ul class="list-unstyled small mb-3">
+            <li class="mb-2"><i class="bi bi-envelope-fill me-2"></i>litflagman@yandex.ru</li>
+            <li class="mb-2"><i class="bi bi-telephone-fill me-2"></i>8(495)775-44-31/32</li>
+            <li class="mb-2"><i class="bi bi-geo-alt-fill me-2"></i>107078, г. Москва, ул. Новорязанская, д. 8 «А», корп. 3, Российский книжный союз с пометкой «Всероссийский конкурс «Самый читающий регион»</li>
+          </ul>
+          <div class="d-flex gap-3 mt-3">
+            <a href="#" class="fs-5" aria-label="VK"><i class="bi bi-vk"></i></a>
+            <a href="#" class="fs-5" aria-label="Telegram"><i class="bi bi-telegram"></i></a>
+            <a href="#" class="fs-5" aria-label="Youtube"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle CDN (includes Popper) -->
+  <!-- Bootstrap 5 JS Bundle CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Scripts -->
+  <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
