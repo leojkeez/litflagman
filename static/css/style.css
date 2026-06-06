@@ -329,9 +329,6 @@ header.header-main-wrapper {
   .partner-logo {
     max-height: 35px;
   }
-  .organizer-item {
-    justify-content: center;
-  }
 }
 
 /* Navigation styling */
@@ -513,7 +510,7 @@ footer a:hover {
   background-origin: border-box !important;
   background-clip: padding-box, border-box !important;
   color: #212529 !important;
-  font-family: 'Neo Sans Bold', sans-serif;
+  font-family: 'Alumni Sans', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
   overflow: hidden;

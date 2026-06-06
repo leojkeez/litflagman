@@ -25,15 +25,7 @@
     <div class="divider-gradient mb-4"></div>
     
     <div class="banner-status mb-4">
-      <div class="p-4 bg-dark text-white rounded-3 d-flex align-items-center justify-content-between overflow-hidden position-relative">
-        <div class="position-relative z-1">
-          <span class="badge bg-danger mb-2">LIVE</span>
-          <h4 class="fw-bold mb-0">Статус конкурса: Прием заявок</h4>
-        </div>
-        <div class="banner-status-icon opacity-25">
-          <i class="bi bi-pencil-square display-1"></i>
-        </div>
-      </div>
+      <img src="{% static 'ban-ok.webp' %}" alt="Статус конкурса" class="img-fluid rounded-3 shadow-sm">
     </div>
     
     <div class="read-more-container">
@@ -73,14 +65,10 @@
     <!-- Два маленьких баннера -->
     <div class="row g-3 mb-4">
       <div class="col-6">
-        <div class="p-3 rounded-3 bg-light border text-center h-100 d-flex align-items-center justify-content-center">
-          <span class="small fw-bold">Клуб первых</span>
-        </div>
+        <img src="{% static 'ban-kp.webp' %}" alt="Клуб первых" class="img-fluid rounded-3 shadow-sm">
       </div>
       <div class="col-6">
-        <div class="p-3 rounded-3 bg-light border text-center h-100 d-flex align-items-center justify-content-center">
-          <span class="small fw-bold">Территория книги и чтения</span>
-        </div>
+        <img src="{% static 'ban-tkc.webp' %}" alt="Территория книги и чтения" class="img-fluid rounded-3 shadow-sm">
       </div>
     </div>
 
@@ -159,24 +147,26 @@
 
 <div class="row py-5 border-top border-light-subtle mt-4">
   <!-- Организаторы конкурса -->
-  <div class="col-lg-8 mb-5 mb-lg-0">
-    <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-lg-start" style="letter-spacing: 0.1em;">Организаторы конкурса</h5>
-    <div class="d-flex flex-wrap justify-content-center justify-content-lg-start align-items-center gap-4 gap-xl-5">
-      <div class="organizer-item">
-        <img src="{% static 'partners/logo-rks.png' %}" alt="РКС" class="organizer-logo">
-        <span class="organizer-text">Российский книжный союз</span>
-      </div>
-      <div class="organizer-item">
-        <img src="{% static 'partners/logo-mc.png' %}" alt="Минцифры" class="organizer-logo">
-        <span class="organizer-text">Министерство цифрового развития, связи и массовых коммуникаций РФ</span>
+  <div class="col-md-8 mb-5 mb-md-0">
+    <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-md-start" style="letter-spacing: 0.1em;">Организаторы конкурса</h5>
+    <div class="d-flex justify-content-center justify-content-md-start">
+      <div class="d-inline-flex flex-column flex-md-row align-items-start align-items-md-center gap-4 gap-xl-5">
+        <div class="organizer-item">
+          <img src="{% static 'partners/logo-rks.png' %}" alt="РКС" class="organizer-logo">
+          <span class="organizer-text">Российский книжный союз</span>
+        </div>
+        <div class="organizer-item">
+          <img src="{% static 'partners/logo-mc.png' %}" alt="Минцифры" class="organizer-logo">
+          <span class="organizer-text">Министерство цифрового развития, связи и массовых коммуникаций РФ</span>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Генеральные партнеры -->
-  <div class="col-lg-4">
-    <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-lg-start" style="letter-spacing: 0.1em;">Генеральные партнеры</h5>
-    <div class="d-flex flex-wrap justify-content-center justify-content-lg-start align-items-center gap-4 gap-xl-5">
+  <div class="col-md-4">
+    <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-md-start" style="letter-spacing: 0.1em;">Генеральные партнеры</h5>
+    <div class="d-flex flex-wrap justify-content-center justify-content-md-start align-items-center gap-4 gap-xl-5">
       <img src="{% static 'partners/logo-uk.png' %}" alt="Университетская КНИГА" class="partner-logo" title="Университетская КНИГА">
       <img src="{% static 'partners/logo-ki.png' %}" alt="Книжная индустрия" class="partner-logo" title="Книжная индустрия">
     </div>
