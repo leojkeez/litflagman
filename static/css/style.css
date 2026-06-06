@@ -8,6 +8,40 @@
   --body-bg: #ffffff;
 }
 
+/* Reusable pulsing gradient border class */
+.card-pulse-gradient {
+  position: relative;
+  background-color: #ffffff !important;
+  border: 1px solid #e9ecef !important;
+  border-radius: 1rem !important;
+}
+
+.card-pulse-gradient::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: var(--main-gradient);
+  filter: blur(25px);
+  border-radius: inherit;
+  opacity: 0.15;
+  animation: card-pulse-glow 5s infinite ease-in-out;
+}
+
+@keyframes card-pulse-glow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.01);
+  }
+}
+
 @font-face {
   font-family: 'Neo Sans Regular';
   src: url('../fonts/Neo Sans Cyr Regular.ttf') format('truetype');
@@ -213,6 +247,7 @@ header.header-main-wrapper {
 
 .hover-purple:hover {
   color: var(--color-purple) !important;
+  opacity: 1 !important;
 }
 
 .transition-all {
@@ -645,20 +680,24 @@ footer a:hover {
 
 .region-search-wrapper .form-control:focus {
   border-bottom-color: var(--color-purple) !important;
-  box-shadow: 0 4px 10px rgba(153, 50, 204, 0.1) !important;
+  box-shadow: none !important; /* Убираем контур (тень) при фокусе */
+  outline: none !important;
 }
 
 .region-search-wrapper .search-icon {
   position: absolute;
   right: 15px;
   top: 50%;
-  transform: translateY(-50%);
-  color: #adb5bd;
-  transition: color 0.3s ease;
+  transform: translateY(20px); /* Изначально ниже центра */
+  opacity: 0; /* Полностью прозрачная */
+  color: var(--color-purple);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
 }
 
 .region-search-wrapper .form-control:focus + .search-icon {
-  color: var(--color-purple);
+  opacity: 1; /* Становится видимой */
+  transform: translateY(-50%); /* Всплывает в центр */
 }
 
 @media (max-width: 991.98px) {
@@ -667,12 +706,17 @@ footer a:hover {
     overflow: hidden;
   }
 
-  .js-regions-container.collapsed .js-regions-list {
-    max-height: 320px; /* Показываем примерно 10-12 строк */
+  .js-regions-container.collapsed:not(.is-searching) .js-regions-list {
+    max-height: 400px; 
     position: relative;
   }
 
-  .js-regions-container.collapsed .js-regions-list::after {
+  /* Когда поиск активен - убираем ограничение и градиент */
+  .js-regions-container.is-searching .js-regions-list {
+    max-height: none;
+  }
+
+  .js-regions-container.collapsed:not(.is-searching) .js-regions-list::after {
     content: '';
     position: absolute;
     bottom: 0;

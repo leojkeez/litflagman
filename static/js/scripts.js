@@ -181,11 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Regions List: Search and Collapse ---
   const regionSearchInput = document.querySelector('.js-region-search');
   const regionsContainer = document.querySelector('.js-regions-container');
-  const regionsExpandBtn = document.querySelector('.js-regions-expand');
   const regionItems = document.querySelectorAll('.js-region-item');
   const regionColumns = document.querySelectorAll('.js-region-column');
 
-  // Инициализация: сворачиваем список на мобильных
+  // Инициализация: сворачиваем список на мобильных (стили в CSS через медиа-запрос)
   if (regionsContainer) {
     regionsContainer.classList.add('collapsed');
   }
@@ -195,11 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
     regionSearchInput.addEventListener('input', function() {
       const query = this.value.toLowerCase().trim();
       
-      // Если есть поиск - автоматически разворачиваем список
-      if (query.length > 0 && regionsContainer.classList.contains('collapsed')) {
-        toggleRegions();
+      // Добавляем класс, если поиск активен, чтобы убрать градиент и ограничение высоты
+      if (query.length > 0) {
+        regionsContainer.classList.add('is-searching');
+      } else {
+        regionsContainer.classList.remove('is-searching');
       }
-
+      
       regionItems.forEach(item => {
         const name = item.getAttribute('data-name');
         if (name.includes(query)) {
@@ -219,61 +220,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-  }
-
-  // Логика разворачивания/сворачивания
-  function toggleRegions() {
-    if (!regionsContainer) return;
-    
-    const isCollapsed = regionsContainer.classList.contains('collapsed');
-    const list = regionsContainer.querySelector('.js-regions-list');
-    const btnText = regionsExpandBtn.querySelector('span');
-    const btnIcon = regionsExpandBtn.querySelector('i');
-
-    if (isCollapsed) {
-      // РАЗВОРАЧИВАЕМ
-      regionsContainer.classList.remove('collapsed');
-      regionsContainer.classList.add('expanded');
-      
-      const fullHeight = list.scrollHeight;
-      list.style.maxHeight = fullHeight + 'px';
-      
-      if (btnText) btnText.textContent = 'Свернуть список';
-      if (btnIcon) {
-        btnIcon.classList.remove('bi-chevron-down');
-        btnIcon.classList.add('bi-chevron-up');
-      }
-
-      // После завершения анимации разрешаем контенту расти свободно
-      setTimeout(() => {
-        if (regionsContainer.classList.contains('expanded')) {
-          list.style.maxHeight = 'none';
-        }
-      }, 600);
-    } else {
-      // СВОРАЧИВАЕМ
-      // Сначала устанавливаем текущую высоту в px вместо 'none', чтобы анимация сработала
-      list.style.maxHeight = list.scrollHeight + 'px';
-      
-      // Небольшая задержка, чтобы браузер успел применить maxHeight в px
-      requestAnimationFrame(() => {
-        regionsContainer.classList.remove('expanded');
-        regionsContainer.classList.add('collapsed');
-        list.style.maxHeight = '320px'; // Возвращаем к высоте из CSS
-        
-        if (btnText) btnText.textContent = 'Показать все регионы';
-        if (btnIcon) {
-          btnIcon.classList.remove('bi-chevron-up');
-          btnIcon.classList.add('bi-chevron-down');
-        }
-      });
-
-      // Скроллим к началу списка, если пользователь свернул его, будучи внизу
-      regionsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  if (regionsExpandBtn) {
-    regionsExpandBtn.addEventListener('click', toggleRegions);
   }
 });
