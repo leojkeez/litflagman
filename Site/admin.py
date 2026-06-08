@@ -108,6 +108,7 @@ class RegionAdmin(admin.ModelAdmin):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ("region", "year", "is_active")
+    search_fields = ("region__title", "year",)
 admin.site.register(BookTerritory)
 admin.site.register(Club)
 admin.site.register(RegionClubMembership)
