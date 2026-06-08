@@ -210,6 +210,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      // Скрываем пустые группы букв
+      const letterGroups = document.querySelectorAll('.js-letter-group');
+      letterGroups.forEach(group => {
+        const visibleInGroup = group.querySelectorAll('.js-region-item:not(.d-none-search)');
+        if (visibleInGroup.length === 0) {
+          group.style.display = 'none';
+        } else {
+          group.style.display = 'block';
+        }
+      });
+
       // Скрываем пустые колонки
       regionColumns.forEach(col => {
         const visibleItems = col.querySelectorAll('.js-region-item:not(.d-none-search)');

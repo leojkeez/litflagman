@@ -4,6 +4,42 @@ from django.db.models import Q, Prefetch
 import datetime
 from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto
 
+def partition_regions_by_letters(groups, k=6):
+    n = len(groups)
+    if n <= k:
+        cols = [[g] for g in groups]
+        while len(cols) < k:
+            cols.append([])
+        return cols
+        
+    weights = [len(g[1]) + 2 for g in groups]
+    
+    dp = [[float('inf')] * (k + 1) for _ in range(n + 1)]
+    parent = [[0] * (k + 1) for _ in range(n + 1)]
+    
+    dp[0][0] = 0
+    
+    pref = [0] * (n + 1)
+    for i in range(n):
+        pref[i+1] = pref[i] + weights[i]
+        
+    for j in range(1, k + 1):
+        for i in range(1, n + 1):
+            for p in range(i):
+                cost = max(dp[p][j-1], pref[i] - pref[p])
+                if cost < dp[i][j]:
+                    dp[i][j] = cost
+                    parent[i][j] = p
+                    
+    cols = []
+    curr_i = n
+    for curr_j in range(k, 0, -1):
+        p = parent[curr_i][curr_j]
+        cols.append(groups[p:curr_i])
+        curr_i = p
+    cols.reverse()
+    return cols
+
 def index(request):
     latest_news = News.objects.filter(is_active=True).order_by('-created_at')[:3]
     
@@ -42,16 +78,33 @@ def index(request):
     # Формируем финальный список объектов для шаблона
     regions_data = []
     for name in master_regions_list:
+        if name.startswith("Республика "):
+            sort_name = name[len("Республика "):]
+        else:
+            sort_name = name
+            
+        letter = sort_name[0].upper() if sort_name else ""
+        
         regions_data.append({
             'name': name,
-            'url': db_regions.get(name) # Если регион есть в БД, тут будет ссылка, иначе None
+            'url': db_regions.get(name), # Если регион есть в БД, тут будет ссылка, иначе None
+            'sort_name': sort_name,
+            'letter': letter
         })
 
+    # Сортируем по значению sort_name
+    regions_data.sort(key=lambda x: x['sort_name'])
+
+    # Группируем по буквам
+    from collections import defaultdict
+    grouped = defaultdict(list)
+    for r in regions_data:
+        grouped[r['letter']].append(r)
+
+    grouped_list = sorted(grouped.items())
+
     # Разбиваем список на 6 колонок
-    import math
-    cols_count = 6
-    rows_per_col = math.ceil(len(regions_data) / cols_count)
-    region_columns = [regions_data[i:i + rows_per_col] for i in range(0, len(regions_data), rows_per_col)]
+    region_columns = partition_regions_by_letters(grouped_list, k=6)
 
     return render(request, "index.html", {
         'latest_news': latest_news,
@@ -77,15 +130,16 @@ def region_detail(request, slug):
     end_year = 2028
     
     # 1. Получаем года, когда регион был победителем
-    contests_winner = {c.year: True for c in Contest.objects.filter(main_project=region, year__gte=start_year, year__lte=end_year)}
+    contests_winner = set(Contest.objects.filter(main_project=region, year__gte=start_year, year__lte=end_year).values_list('year', flat=True))
     
-    # 2. Получаем года, когда регион был лауреатом (в шорт-листе или в топе)
-    contests_other = Contest.objects.filter(
-        Q(short_list=region) | Q(top=region),
-        year__gte=start_year,
-        year__lte=end_year
-    ).values_list('year', flat=True)
-    contests_laureate = {y: True for y in contests_other}
+    # 2. Получаем года, когда регион был в топе (лауреаты)
+    contests_top = set(Contest.objects.filter(top=region, year__gte=start_year, year__lte=end_year).values_list('year', flat=True))
+    
+    # 3. Получаем года, когда регион был в шорт-листе
+    contests_short_list = set(Contest.objects.filter(short_list=region, year__gte=start_year, year__lte=end_year).values_list('year', flat=True))
+    
+    # Объединенный сет для лауреатов (топ + шорт-лист) для обратной совместимости статуса
+    contests_laureate_years = contests_top | contests_short_list
     
     # 3. Загружаем проекты региона за эти годы со связанными слайдерами и фото
     photo_prefetch = Prefetch(
@@ -119,13 +173,14 @@ def region_detail(request, slug):
     
     years_data = []
     for year in range(start_year, end_year + 1):
-        is_winner = contests_winner.get(year, False)
-        is_laureate = contests_laureate.get(year, False)
+        is_winner = year in contests_winner
+        is_top = year in contests_top
+        is_short_list = year in contests_short_list
         
         status = 'none'
         if is_winner:
             status = 'winner'
-        elif is_laureate:
+        elif is_top or is_short_list:
             status = 'laureate'
             
         project = projects_by_year.get(year, None)
@@ -133,6 +188,8 @@ def region_detail(request, slug):
         years_data.append({
             'year': year,
             'status': status,
+            'is_winner': is_winner,
+            'is_top': is_top,
             'project': project,
             'has_project': project is not None
         })

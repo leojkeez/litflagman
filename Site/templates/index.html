@@ -134,17 +134,22 @@
         <div class="row g-4 js-regions-list">
           {% for column in region_columns %}
           <div class="col-6 col-md-4 col-lg-2 js-region-column">
-            <ul class="list-unstyled mb-0 small">
-              {% for region in column %}
-              <li class="mb-2 js-region-item" data-name="{{ region.name|lower }}">
-                {% if region.url %}
-                  <a href="{{ region.url }}" class="text-muted opacity-50 text-decoration-none hover-purple transition-all">{{ region.name }}</a>
-                {% else %}
-                  <span class="text-muted opacity-50">{{ region.name }}</span>
-                {% endif %}
-              </li>
-              {% endfor %}
-            </ul>
+            {% for letter, regions in column %}
+            <div class="region-letter-group mb-4 js-letter-group">
+              <h6 class="fw-bold text-dark pb-1 mb-2">{{ letter }}</h6>
+              <ul class="list-unstyled mb-0 small">
+                {% for region in regions %}
+                <li class="mb-2 js-region-item" data-name="{{ region.name|lower }}">
+                  {% if region.url %}
+                    <a href="/region/{{ region.url }}" class="text-muted opacity-50 text-decoration-none hover-purple transition-all">{{ region.name }}</a>
+                  {% else %}
+                    <span class="text-muted opacity-50">{{ region.name }}</span>
+                  {% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
           </div>
           {% endfor %}
         </div>

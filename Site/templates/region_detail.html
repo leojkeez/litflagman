@@ -5,116 +5,7 @@
 {% block meta_description %}{{ region.seo_description }}{% endblock %}
 
 {% block extra_head %}
-<style>
-  /* Золотой и серебряный статусы для годов */
-  .text-gold {
-    color: #d4af37 !important;
-    font-weight: 800 !important;
-    font-size: 1.3rem !important;
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-    transition: all 0.2s ease;
-    display: inline-block;
-  }
-  .text-silver {
-    color: #8a9597 !important;
-    font-weight: 700 !important;
-    font-size: 1.15rem !important;
-    text-shadow: 0 0 6px rgba(138, 149, 151, 0.2);
-    transition: all 0.2s ease;
-    display: inline-block;
-  }
-  .text-normal-year {
-    color: #6c757d;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-    display: inline-block;
-  }
-  
-  .year-item {
-    text-align: center;
-    padding: 10px 0;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  /* Эффекты при наведении */
-  .year-item:hover .text-normal-year {
-    color: var(--color-purple) !important;
-    transform: scale(1.15);
-  }
-  .year-item:hover .text-gold {
-    color: #ffdf00 !important;
-    transform: scale(1.2);
-    text-shadow: 0 0 15px rgba(255, 223, 0, 0.6);
-  }
-  .year-item:hover .text-silver {
-    color: #a3b8cc !important;
-    transform: scale(1.2);
-    text-shadow: 0 0 12px rgba(163, 184, 204, 0.5);
-  }
-  
-  /* Линия таймлайна и ползунок */
-  .years-timeline-line {
-    position: relative;
-    width: 100%;
-    height: 4px;
-    background-color: #dee2e6;
-    border-radius: 2px;
-    margin-top: 5px;
-    margin-bottom: 25px;
-  }
-  .years-slider-knob {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--main-gradient);
-    border-radius: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px rgba(153, 50, 204, 0.5), 0 0 4px rgba(153, 50, 204, 0.3);
-    transition: left 0.15s ease-out; /* Плавное движение ползунка */
-    pointer-events: none;
-    z-index: 5;
-  }
-  
-  /* Бейджи статусов */
-  .badge-gold {
-    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
-    color: #111111 !important;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
-    border: 1px solid rgba(255, 215, 0, 0.4);
-    letter-spacing: 0.5px;
-  }
-  .badge-silver {
-    background: linear-gradient(135deg, #e2e2e2 0%, #a0a0a0 100%) !important;
-    color: #111111 !important;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(160, 160, 160, 0.25);
-    border: 1px solid rgba(192, 192, 192, 0.4);
-    letter-spacing: 0.5px;
-  }
-  
-  /* Слайдеры */
-  .region-slider-wrapper {
-    transition: opacity 0.3s ease;
-  }
-  .region-slider-wrapper img {
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 1rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  }
-  
-  /* Специфический контур */
-  .card-pulse-gradient {
-    position: relative;
-    background-color: #ffffff !important;
-    border: 1px solid #e9ecef !important;
-    border-radius: 1rem !important;
-  }
-</style>
+<link rel="stylesheet" href="{% static 'css/region_detail.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -137,67 +28,47 @@
   <!-- 2 строка - по середине название -->
   <div class="row mb-5 text-center">
     <div class="col-12">
-      <h1 class="fw-bold mb-2 text-dark display-4">{{ region.title }}</h1>
-      <div class="divider-gradient mx-auto" style="width: 150px; height: 4px; border-radius: 2px; background: var(--main-gradient);"></div>
+      <h1 class="fw-bold mb-2 text-dark display-4">
+        {{ region.title }}
+      </h1>
     </div>
   </div>
 
   <!-- 3 строка - описание региона (7 col) и данные по региону (5 col) -->
-  <div class="row g-4 mb-5">
+  <div class="row g-4 my-5 justify-content-center">
     <!-- Описание региона -->
-    <div class="col-lg-7">
-      <div class="bg-white p-4 p-md-5 h-100 rounded-3 shadow-sm border border-light-subtle">
-        <h3 class="fw-bold mb-4" style="color: var(--color-purple);">
-          <i class="bi bi-book-half me-2"></i>О регионе
-        </h3>
+    <div class="col-lg-5 order-2 order-lg-1">
+        <h3 class="fw-bold mb-4 text-center" style="font-family: 'Alumni Sans', sans-serif;">О регионе</h3>
         <div class="txt-wide text-muted">
           {{ region.region_description|safe }}
-        </div>
       </div>
-    </div>
-    
+    </div>    
     <!-- Данные по региону -->
-    <div class="col-lg-5">
-      <div class="bg-light p-4 p-md-5 h-100 rounded-3 shadow-sm border border-light-subtle d-flex flex-column justify-content-between">
-        <div>
-          <h3 class="fw-bold mb-4" style="color: var(--color-turquoise);">
-            <i class="bi bi-info-circle-fill me-2"></i>Данные по региону
-          </h3>
+    <div class="col-lg-3 text-center order-1 order-lg-2">
+          {% for item in years_data %}
+            {% if item.is_winner or item.is_top %}
+              <span class="js-region-badge" data-year="{{ item.year }}" style="display: {% if item.year == active_year %}inline-block{% else %}none{% endif %}; vertical-align: middle; margin-left: 15px;">
+                {% if item.is_winner %}
+                  <img src="{% static '1st.svg' %}" alt="Победитель" title="Победитель {{ item.year }}" style="height: 60px; width: auto;" class="mb-3">
+                {% endif %}
+                {% if item.is_top %}
+                  <img src="{% static 'boat.svg' %}" alt="Топ" title="Топ {{ item.year }}" style="height: 60px; width: auto;" class="mb-3">
+                {% endif %}
+              </span>
+            {% endif %}
+          {% endfor %}
           
           {% if region.most_reading_region %}
-            <div class="mb-4 bg-white p-3 rounded-3 shadow-2xs border-start border-4 border-info">
-              <h6 class="fw-bold text-dark mb-2">Самый читающий регион:</h6>
               <div class="small text-muted mb-0">
-                {{ region.most_reading_region|linebreaks }}
+                {{ region.most_reading_region|linebreaks|safe }}
               </div>
-            </div>
           {% endif %}
-          
-          {% if region.right_column_text %}
-            <div class="mb-4 bg-white p-3 rounded-3 shadow-2xs border-start border-4 border-primary">
-              <h6 class="fw-bold text-dark mb-2">Дополнительные сведения:</h6>
-              <div class="small text-muted mb-0">
-                {{ region.right_column_text|linebreaks }}
-              </div>
-            </div>
-          {% endif %}
-        </div>
-        
-        <div class="mt-2 text-center text-lg-start">
-          <span class="text-muted small">
-            <i class="bi bi-calendar-event me-1"></i> Данные обновлены: {% now "Y" %} год
-          </span>
-        </div>
-      </div>
     </div>
   </div>
 
   <!-- 4 строка - слайдер -->
   <div class="row mb-5 justify-content-center">
     <div class="col-12 col-lg-10">
-      <h3 class="fw-bold text-center mb-4">
-        <i class="bi bi-images me-2 text-primary"></i>Медиагалерея проекта
-      </h3>
       <div class="region-sliders-container">
         {% for item in years_data %}
           <div class="region-slider-wrapper js-region-slider" data-year="{{ item.year }}" style="display: {% if item.year == active_year %}block{% else %}none{% endif %};">
@@ -205,7 +76,7 @@
               {% include "sliders/carousel.html" with slider=item.project.slider ordered_photos=item.project.slider.ordered_photos_list %}
             {% else %}
               <!-- Стильная заглушка, если слайдер отсутствует -->
-              <div class="text-center py-5 px-4 rounded-3 border border-light-subtle d-flex flex-column align-items-center justify-content-center shadow-sm" style="background-color: #fafbfc; min-height: 350px;">
+              <div class="text-center py-5 px-4 rounded-3 border border-light-subtle d-flex flex-column align-items-center justify-content-center shadow-sm region-slider-placeholder">
                 <div class="bg-white rounded-circle p-4 mb-3 shadow-2xs">
                   <i class="bi bi-images text-muted" style="font-size: 3rem;"></i>
                 </div>
@@ -222,14 +93,10 @@
   <!-- 5 строка - надпись (разными цветами) - Статусы региона -->
   <div class="row mb-4 justify-content-center">
     <div class="col-12 text-center">
-      <div class="d-inline-flex align-items-center justify-content-center flex-wrap gap-2 py-2 px-4 bg-white shadow-2xs border rounded-pill">
-        <span class="fw-bold text-dark me-2 small text-uppercase">Статусы региона:</span>
-        <span class="badge badge-gold px-3 py-2 rounded-pill small text-uppercase d-flex align-items-center">
-          <i class="bi bi-trophy-fill me-1"></i> Победитель (золото)
-        </span>
-        <span class="badge badge-silver px-3 py-2 rounded-pill small text-uppercase d-flex align-items-center">
-          <i class="bi bi-award-fill me-1"></i> Лауреат (серебро)
-        </span>
+      <div class="d-flex align-items-center justify-content-center flex-wrap gap-3 fw-bold text-uppercase region-statuses-text" style="font-size: 1.8rem; letter-spacing: 0.5px; font-family: 'Alumni Sans', sans-serif;">
+        <span class="text-muted">Статусы региона:</span>
+        <span style="color: #d4af37;">Победитель,</span>
+        <span style="color: #8a9597;">Лауреат</span>
       </div>
     </div>
   </div>
@@ -241,21 +108,23 @@
         
         <!-- Верхняя часть блока: шкала годов от 2015 до 2028 -->
         <div class="position-relative px-2">
-          <!-- Контейнер для отображения названий годов -->
-          <div class="d-flex justify-content-between align-items-center position-relative years-nav-list" style="z-index: 2;">
-            {% for item in years_data %}
-              <div class="year-item flex-fill js-year-select {% if item.year == active_year %}active{% endif %}" data-year="{{ item.year }}">
-                <span class="year-text {% if item.status == 'winner' %}text-gold{% elif item.status == 'laureate' %}text-silver{% else %}text-normal-year{% endif %}">
-                  {{ item.year }}
-                </span>
-              </div>
-            {% endfor %}
-          </div>
-          
-          <!-- Линия таймлайна с ползунком -->
-          <div class="years-timeline-line position-relative w-100 bg-secondary-subtle">
-            <!-- Бегающий ползунок -->
-            <div class="years-slider-knob"></div>
+          <div class="years-nav-container">
+            <!-- Контейнер для отображения названий годов -->
+            <div class="d-flex justify-content-between align-items-center position-relative years-nav-list" style="z-index: 2;">
+              {% for item in years_data %}
+                <div class="year-item flex-fill js-year-select {% if item.year == active_year %}active{% endif %}" data-year="{{ item.year }}">
+                  <span class="year-text {% if item.status == 'winner' %}text-gold{% elif item.status == 'laureate' %}text-silver{% else %}text-normal-year{% endif %}">
+                    {{ item.year }}
+                  </span>
+                </div>
+              {% endfor %}
+            </div>
+            
+            <!-- Линия таймлайна с ползунком -->
+            <div class="years-timeline-line position-relative bg-secondary-subtle">
+              <!-- Бегающий ползунок -->
+              <div class="years-slider-knob"></div>
+            </div>
           </div>
         </div>
         
@@ -264,21 +133,7 @@
           {% for item in years_data %}
             <div class="project-details-wrapper js-project-detail" data-year="{{ item.year }}" style="display: {% if item.year == active_year %}block{% else %}none{% endif %};">
               {% if item.project %}
-                <div class="d-flex align-items-center gap-2 mb-3">
-                  <span class="badge bg-purple-subtle text-purple px-3 py-2 rounded-pill fw-bold">
-                    {{ item.year }} год
-                  </span>
-                  {% if item.status == 'winner' %}
-                    <span class="badge badge-gold px-3 py-2 rounded-pill">
-                      <i class="bi bi-trophy-fill me-1"></i> Литературный флагман России
-                    </span>
-                  {% elif item.status == 'laureate' %}
-                    <span class="badge badge-silver px-3 py-2 rounded-pill">
-                      <i class="bi bi-award-fill me-1"></i> Лауреат конкурса
-                    </span>
-                  {% endif %}
-                </div>
-                <h2 class="fw-bold mb-3 text-dark">{{ item.project.seo_title }}</h2>
+                <h2 class="fw-bold mb-3 text-dark text-center" style="font-family: 'Alumni Sans', sans-serif;">{{ item.project.seo_title }}</h2>
                 <div class="txt-wide text-muted">
                   {{ item.project.project_description|safe }}
                 </div>
@@ -288,7 +143,7 @@
                     <i class="bi bi-folder-x fs-1 text-muted"></i>
                   </div>
                   <h4 class="fw-bold mb-1">Проект не представлен</h4>
-                  <p class="mb-0 small">В {{ item.year }} году данные по проекту региона отсутствуют или регион не участвовал в конкурсе.</p>
+                  <p class="mb-0 small">В <span style="font-family: 'Alumni Sans', sans-serif; font-weight: bold; font-size: 1.1em;">{{ item.year }}</span> году данные по проекту региона отсутствуют или регион не участвовал в конкурсе.</p>
                 </div>
               {% endif %}
             </div>
@@ -302,96 +157,5 @@
 </div>
 
 <!-- Скрипт для интерактивного переключения лет и бегающего ползунка -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const yearItems = document.querySelectorAll('.js-year-select');
-    const knob = document.querySelector('.years-slider-knob');
-    const timelineLine = document.querySelector('.years-timeline-line');
-    const yearsNavList = document.querySelector('.years-nav-list');
-    
-    if (!yearItems.length || !knob || !timelineLine) return;
-
-    // Рассчитывает координату центра элемента относительно линии
-    function getCenterOffset(element) {
-      const rect = element.getBoundingClientRect();
-      const parentRect = timelineLine.getBoundingClientRect();
-      return (rect.left + rect.width / 2) - parentRect.left;
-    }
-
-    // Передвигает ползунок к элементу
-    function moveKnobTo(element) {
-      const offset = getCenterOffset(element);
-      knob.style.left = `${offset}px`;
-    }
-
-    // Находим активный элемент при загрузке страницы
-    let activeItem = document.querySelector('.js-year-select.active') || yearItems[0];
-    if (activeItem) {
-      activeItem.classList.add('active');
-      // Запуск позиционирования с небольшой задержкой, чтобы страница успела отрисоваться
-      setTimeout(() => {
-        moveKnobTo(activeItem);
-      }, 150);
-    }
-
-    // Переключает описание проектов и слайдеры
-    function switchYear(year) {
-      // Переключаем проекты
-      document.querySelectorAll('.js-project-detail').forEach(el => {
-        if (el.getAttribute('data-year') === year) {
-          el.style.display = 'block';
-        } else {
-          el.style.display = 'none';
-        }
-      });
-
-      // Переключаем слайдеры (медиагалереи)
-      document.querySelectorAll('.js-region-slider').forEach(el => {
-        if (el.getAttribute('data-year') === year) {
-          el.style.display = 'block';
-        } else {
-          el.style.display = 'none';
-        }
-      });
-    }
-
-    // Обработка событий для каждого года
-    yearItems.forEach(item => {
-      // При наведении курсора на год — ползунок бежит за ним, и проект плавно переключается
-      item.addEventListener('mouseenter', () => {
-        moveKnobTo(item);
-        const year = item.getAttribute('data-year');
-        switchYear(year);
-      });
-
-      // При клике фиксируем выбранный год как активный
-      item.addEventListener('click', () => {
-        yearItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        activeItem = item;
-        moveKnobTo(item);
-        const year = item.getAttribute('data-year');
-        switchYear(year);
-      });
-    });
-
-    // Когда курсор покидает всю область выбора годов, ползунок возвращается к зафиксированному активному году
-    if (yearsNavList) {
-      yearsNavList.addEventListener('mouseleave', () => {
-        if (activeItem) {
-          moveKnobTo(activeItem);
-          const year = activeItem.getAttribute('data-year');
-          switchYear(year);
-        }
-      });
-    }
-
-    // Пересчет позиции ползунка при изменении размеров экрана
-    window.addEventListener('resize', () => {
-      if (activeItem) {
-        moveKnobTo(activeItem);
-      }
-    });
-  });
-</script>
+<script src="{% static 'js/region_detail.js' %}"></script>
 {% endblock %}
