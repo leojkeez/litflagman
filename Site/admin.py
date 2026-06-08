@@ -7,6 +7,78 @@ from .models import Region, Project, BookTerritory, Club, RegionClubMembership, 
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+import os
+import re
+from django import forms
+from django.conf import settings
+
+
+def get_svg_ids_from_map():
+    """
+    Динамически парсит файл шаблона карты Site/templates/includes/map.html
+    и возвращает список всех существующих на карте идентификаторов регионов (SVG ID)
+    для отображения в выпадающем списке админки.
+    """
+    defaults = [
+        ('PETERSBURG', 'Санкт-Петербург'),
+        ('ARHANGELSKAYA_OBLAST', 'Архангельская область'),
+        ('BELGOROD', 'Белгородская область'),
+        ('VORONEZH', 'Воронежская область'),
+        ('ULYANOVSK', 'Ульяновская область'),
+        ('NOVOSIBIRSKAYA_OBLAST', 'Новосибирская область'),
+        ('IRKUTSK', 'Иркутская область'),
+        ('TATARSTAN', 'Республика Татарстан'),
+        ('YAKUTIYA', 'Республика Саха (Якутия)'),
+        ('RESPUBLIKA_BASHKORTOSTAN', 'Республика Башкортостан'),
+        ('KURSKAYA_OBLAST', 'Курская область'),
+    ]
+    
+    map_path = os.path.join(settings.BASE_DIR, 'Site', 'templates', 'includes', 'map.html')
+    if not os.path.exists(map_path):
+        map_path = os.path.join(settings.BASE_DIR, 'templates', 'includes', 'map.html')
+        
+    if not os.path.exists(map_path):
+        return defaults
+
+    try:
+        with open(map_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Ищем id всех элементов с классом js-history-competition-region
+        pattern = r'class="[^"]*js-history-competition-region[^"]*"\s+id="([^"]+)"'
+        matches = re.findall(pattern, content)
+        
+        pattern_reverse = r'id="([^"]+)"\s+class="[^"]*js-history-competition-region[^"]*"'
+        matches += re.findall(pattern_reverse, content)
+        
+        if not matches:
+            return defaults
+            
+        region_names_mapping = {
+            'PETERSBURG': 'Санкт-Петербург',
+            'ARHANGELSKAYA_OBLAST': 'Архангельская область',
+            'BELGOROD': 'Белгородская область',
+            'VORONEZH': 'Воронежская область',
+            'ULYANOVSK': 'Ульяновская область',
+            'NOVOSIBIRSKAYA_OBLAST': 'Новосибирская область',
+            'IRKUTSK': 'Иркутская область',
+            'TATARSTAN': 'Республика Татарстан',
+            'YAKUTIYA': 'Республика Саха (Якутия)',
+            'RESPUBLIKA_BASHKORTOSTAN': 'Республика Башкортостан',
+            'KURSKAYA_OBLAST': 'Курская область'
+        }
+        
+        choices = [('', '--- Выберите регион на карте ---')]
+        for svg_id in sorted(list(set(matches))):
+            display_name = region_names_mapping.get(svg_id)
+            if not display_name:
+                # Автоматически форматируем красивое имя по умолчанию, если оно не найдено в маппинге
+                display_name = svg_id.replace('_', ' ').title()
+            choices.append((svg_id, display_name))
+            
+        return choices
+    except Exception:
+        return defaults
 
 
 # Register your models here.
@@ -15,6 +87,22 @@ class RegionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"region_url": ("title",)}
     list_display = ("title", "svg_id", "is_active",)
     search_fields = ("title", "svg_id",)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """
+        Переопределяем форму редактирования в админке:
+        Делаем текстовое поле svg_id выпадающим списком с динамически
+        вычисляемыми вариантами из файла карты templates/includes/map.html
+        """
+        if db_field.name == 'svg_id':
+            choices = get_svg_ids_from_map()
+            return forms.ChoiceField(
+                choices=choices,
+                required=False,
+                label=db_field.verbose_name,
+                help_text=db_field.help_text
+            )
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 @admin.register(Project)

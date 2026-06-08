@@ -106,9 +106,13 @@ def index(request):
     # Разбиваем список на 6 колонок
     region_columns = partition_regions_by_letters(grouped_list, k=6)
 
+    # Получаем все активные регионы с заполненным svg_id для интерактивной карты
+    map_regions = Region.objects.filter(is_active=True, svg_id__isnull=False).exclude(svg_id="").prefetch_related('contest_main_project')
+
     return render(request, "index.html", {
         'latest_news': latest_news,
-        'region_columns': region_columns
+        'region_columns': region_columns,
+        'map_regions': map_regions
     })
 
 @staff_member_required

@@ -261,6 +261,13 @@ class Contest(models.Model):
     def __str__(self):
         return f"{self.seo_title} ({self.year})"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Если выбран главный проект (победитель), автоматически активируем регион
+        if self.main_project:
+            self.main_project.is_active = True
+            self.main_project.save()
+
     class Meta:
         verbose_name = "Конкурс (итоги)"
         verbose_name_plural = "Конкурсы (итоги)"

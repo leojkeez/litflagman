@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mapElement && mapTooltip) {
     const regions = mapElement.querySelectorAll('.js-history-competition-region');
     const container = mapElement.closest('.map-card-wrapper') || mapElement.closest('.position-relative') || mapElement.closest('.col-lg-6');
+    const winnerCard = document.querySelector('.js-winner-card');
 
     regions.forEach(region => {
       region.addEventListener('mouseenter', () => {
@@ -142,7 +143,120 @@ document.addEventListener('DOMContentLoaded', () => {
       region.addEventListener('mouseleave', () => {
         mapTooltip.style.display = 'none';
       });
+
+      // Обработка выбора региона при клике
+      region.addEventListener('click', () => {
+        const regionId = region.getAttribute('id');
+        const regionDataEl = document.querySelector(`.js-map-region-item[data-svg-id="${regionId}"]`);
+
+        if (regionDataEl && winnerCard) {
+          const title = regionDataEl.getAttribute('data-title');
+          const text = regionDataEl.getAttribute('data-text');
+          const coat = regionDataEl.getAttribute('data-coat');
+          const years = regionDataEl.getAttribute('data-years');
+          const url = regionDataEl.getAttribute('data-url');
+
+          const cardTitle = winnerCard.querySelector('.js-winner-title');
+          const cardYear = winnerCard.querySelector('.js-winner-year');
+          const cardText = winnerCard.querySelector('.js-winner-text');
+          const cardCoat = winnerCard.querySelector('.js-winner-coat');
+          const cardCoatContainer = winnerCard.querySelector('.js-winner-coat-container');
+          const cardContentContainer = winnerCard.querySelector('.js-winner-content-container');
+          const cardLink = winnerCard.querySelector('.js-winner-link');
+
+          // Заполняем данные карточки
+          if (cardTitle) cardTitle.textContent = title;
+          
+          if (cardYear) {
+            if (years) {
+              cardYear.textContent = years;
+              cardYear.style.display = '';
+            } else {
+              cardYear.style.display = 'none';
+            }
+          }
+
+          if (cardText) {
+            // Если текст пустой, выводим стандартную заглушку или очищаем
+            cardText.innerHTML = text ? text.replace(/\n/g, '<br>') : 'Информация о проектах региона в рамках конкурса.';
+          }
+
+          if (cardCoat && cardCoatContainer && cardContentContainer) {
+            if (coat) {
+              cardCoat.setAttribute('src', coat);
+              cardCoatContainer.style.display = '';
+              cardContentContainer.className = 'col js-winner-content-container';
+            } else {
+              cardCoatContainer.style.display = 'none';
+              cardContentContainer.className = 'col-12 js-winner-content-container';
+            }
+          }
+
+          if (cardLink) {
+            if (url) {
+              cardLink.setAttribute('href', url);
+              cardLink.style.display = '';
+            } else {
+              cardLink.style.display = 'none';
+            }
+          }
+
+          // Убираем подсветку со всех регионов и подсвечиваем кликнутый
+          regions.forEach(r => r.classList.remove('is-selected'));
+          region.classList.add('is-selected');
+
+          // Плавно показываем карточку с анимацией
+          winnerCard.classList.remove('d-none');
+          winnerCard.style.opacity = '0';
+          winnerCard.style.transform = 'translateY(10px)';
+          winnerCard.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          
+          // Триггер перерисовки для запуска анимации
+          winnerCard.offsetHeight;
+          
+          winnerCard.style.opacity = '1';
+          winnerCard.style.transform = 'translateY(0)';
+        } else {
+          // Если регион не заведен в базу, скрываем карточку и снимаем выделение
+          if (winnerCard) {
+            regions.forEach(r => r.classList.remove('is-selected'));
+            winnerCard.style.opacity = '0';
+            winnerCard.style.transform = 'translateY(10px)';
+            winnerCard.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            setTimeout(() => {
+              winnerCard.classList.add('d-none');
+            }, 400);
+          }
+        }
+      });
     });
+
+    // --- Автоматически выбираем регион текущего года по умолчанию ---
+    const currentYear = new Date().getFullYear(); // 2026
+    let defaultRegionData = Array.from(document.querySelectorAll('.js-map-region-item')).find(el => {
+      const years = el.getAttribute('data-years') || '';
+      return years.split(', ').map(y => y.trim()).includes(String(currentYear));
+    });
+
+    // Если победителя за текущий год в базе нет, берем регион с самым последним годом победы
+    if (!defaultRegionData) {
+      defaultRegionData = Array.from(document.querySelectorAll('.js-map-region-item')).sort((a, b) => {
+        const yearsA = (a.getAttribute('data-years') || '').split(', ').map(Number);
+        const yearsB = (b.getAttribute('data-years') || '').split(', ').map(Number);
+        const maxA = yearsA.length ? Math.max(...yearsA) : 0;
+        const maxB = yearsB.length ? Math.max(...yearsB) : 0;
+        return maxB - maxA;
+      })[0];
+    }
+
+    if (defaultRegionData) {
+      const svgId = defaultRegionData.getAttribute('data-svg-id');
+      const regionEl = mapElement.querySelector(`#${svgId}`);
+      if (regionEl) {
+        // Триггерим клик, чтобы карточка отобразилась по умолчанию
+        regionEl.dispatchEvent(new Event('click'));
+      }
+    }
   }
 
   // --- Read More Toggle ---
