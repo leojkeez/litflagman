@@ -204,3 +204,78 @@ def region_detail(request, slug):
         'active_year': active_year,
     })
 
+
+def contest_detail(request, year=None):
+    if year is None:
+        last_contest = Contest.objects.order_by('-year').first()
+        if last_contest:
+            year = last_contest.year
+        else:
+            year = datetime.datetime.now().year
+    
+    # Ограничим диапазон согласно требованиям от 2015 до 2028
+    if year < 2015 or year > 2028:
+        year = 2025 # Дефолт, если передан некорректный год
+        
+    contest = get_object_or_404(Contest, year=year)
+    years = list(range(2015, 2029))
+
+    winner_region = contest.main_project
+    winner_project = None
+    winner_slider = None
+    winner_photos = []
+    
+    if winner_region:
+        winner_project = Project.objects.filter(region=winner_region, year=year, is_active=True).first()
+        if winner_project:
+            winner_slider = Slider.objects.filter(project=winner_project, is_active=True).first()
+            if winner_slider:
+                winner_photos = SliderPhoto.objects.filter(slider=winner_slider).select_related('photo').order_by('order')
+
+    # Лауреаты конкурса - это contest.top
+    laureates = contest.top.filter(is_active=True)
+    laureates_data = []
+    for r in laureates:
+        proj = Project.objects.filter(region=r, year=year, is_active=True).first()
+        laureates_data.append({
+            'region': r,
+            'project': proj
+        })
+
+    # Короткий список - это contest.short_list
+    short_list_regions = contest.short_list.filter(is_active=True).order_by('title')
+    short_list_data = []
+    for r in short_list_regions:
+        proj = Project.objects.filter(region=r, year=year, is_active=True).first()
+        short_list_data.append({
+            'region': r,
+            'project': proj
+        })
+
+    context = {
+        'contest': contest,
+        'year': year,
+        'years': years,
+        'winner_region': winner_region,
+        'winner_project': winner_project,
+        'winner_slider': winner_slider,
+        'winner_photos': winner_photos,
+        'laureates_data': laureates_data,
+        'short_list_data': short_list_data,
+    }
+    return render(request, "contest_detail.html", context)
+
+
+def contest_detail_default(request):
+    last_contest = Contest.objects.order_by('-year').first()
+    if last_contest:
+        year = last_contest.year
+    else:
+        year = datetime.datetime.now().year
+        
+    if year < 2015 or year > 2028:
+        year = 2025
+        
+    return redirect('contest_detail', year=year)
+
+

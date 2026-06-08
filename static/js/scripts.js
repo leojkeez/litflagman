@@ -193,8 +193,16 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           if (cardLink) {
-            if (url) {
-              cardLink.setAttribute('href', url);
+            let finalUrl = url;
+            if (years) {
+              const yearList = years.split(',').map(y => y.trim()).filter(Boolean);
+              if (yearList.length > 0) {
+                const lastYear = yearList[yearList.length - 1];
+                finalUrl = `/${lastYear}-contest/`;
+              }
+            }
+            if (finalUrl) {
+              cardLink.setAttribute('href', finalUrl);
               cardLink.style.display = '';
             } else {
               cardLink.style.display = 'none';
