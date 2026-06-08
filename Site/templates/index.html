@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Главная — LitFlagman{% endblock %}
+{% block title %}Главная — Литфлагман — Всероссийский конкурс «Самый читающий регион»{% endblock %}
+
+{% block meta_description %}Присоединяйтесь к Всероссийскому конкурсу «Самый читающий регион». Здесь вы найдете информацию о литературных инициативах всех 89 регионов России, новости книжной отрасли и итоги конкурса.{% endblock %}
+
+{% block structured_data %}
+{{ block.super }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Литфлагман",
+  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'logo.png' %}",
+  "description": "Всероссийский конкурс книжных проектов и инициатив «Самый читающий регион»."
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <div class="row align-items-center py-5">
@@ -136,7 +152,7 @@
   </div>
 </div>
 
-<div class="row py-5 border-top border-light-subtle mt-4">
+<div class="row py-5 mt-4">
   <!-- Организаторы конкурса -->
   <div class="col-md-8 mb-5 mb-md-0">
     <h5 class="text-uppercase fw-bold small text-muted mb-4 text-center text-md-start" style="letter-spacing: 0.1em;">Организаторы конкурса</h5>

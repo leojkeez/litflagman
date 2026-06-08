@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Photo, News, Region
+from django.db.models import Q, Prefetch
+import datetime
+from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto
 
 def index(request):
     latest_news = News.objects.filter(is_active=True).order_by('-created_at')[:3]
@@ -63,3 +65,81 @@ def multi_upload_photos(request):
             Photo.objects.create(title=file.name, image=file)
         return redirect("admin:Site_photo_changelist")
     return render(request, "admin/multi_upload_photos.html")
+
+
+def region_detail(request, slug):
+    # Пытаемся найти регион по URL из БД
+    region_url = f"/region/{slug}/"
+    region = get_object_or_404(Region, Q(region_url=region_url) | Q(region_url=f"/region/{slug}") | Q(region_url=slug))
+    
+    # Года от 2015 до 2028 включительно
+    start_year = 2015
+    end_year = 2028
+    
+    # 1. Получаем года, когда регион был победителем
+    contests_winner = {c.year: True for c in Contest.objects.filter(main_project=region, year__gte=start_year, year__lte=end_year)}
+    
+    # 2. Получаем года, когда регион был лауреатом (в шорт-листе или в топе)
+    contests_other = Contest.objects.filter(
+        Q(short_list=region) | Q(top=region),
+        year__gte=start_year,
+        year__lte=end_year
+    ).values_list('year', flat=True)
+    contests_laureate = {y: True for y in contests_other}
+    
+    # 3. Загружаем проекты региона за эти годы со связанными слайдерами и фото
+    photo_prefetch = Prefetch(
+        'sliderphoto_set',
+        queryset=SliderPhoto.objects.select_related('photo').order_by('order'),
+        to_attr='ordered_photos_list'
+    )
+    
+    slider_prefetch = Prefetch(
+        'slider',
+        queryset=Slider.objects.filter(is_active=True).prefetch_related(photo_prefetch)
+    )
+    
+    projects_qs = Project.objects.filter(
+        region=region,
+        is_active=True,
+        year__gte=start_year,
+        year__lte=end_year
+    ).prefetch_related(slider_prefetch)
+    
+    projects_by_year = {p.year: p for p in projects_qs}
+    
+    # Ищем дефолтный (активный) год: последний проект или последний год (2028)
+    active_year = datetime.datetime.now().year
+    if active_year < start_year or active_year > end_year:
+        active_year = end_year
+        
+    # Если за текущий год проекта нет, возьмем последний доступный год с проектом
+    if active_year not in projects_by_year and projects_by_year:
+        active_year = max(projects_by_year.keys())
+    
+    years_data = []
+    for year in range(start_year, end_year + 1):
+        is_winner = contests_winner.get(year, False)
+        is_laureate = contests_laureate.get(year, False)
+        
+        status = 'none'
+        if is_winner:
+            status = 'winner'
+        elif is_laureate:
+            status = 'laureate'
+            
+        project = projects_by_year.get(year, None)
+        
+        years_data.append({
+            'year': year,
+            'status': status,
+            'project': project,
+            'has_project': project is not None
+        })
+        
+    return render(request, "region_detail.html", {
+        'region': region,
+        'years_data': years_data,
+        'active_year': active_year,
+    })
+
