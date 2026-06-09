@@ -41,7 +41,7 @@ def partition_regions_by_letters(groups, k=6):
     return cols
 
 def index(request):
-    latest_news = News.objects.filter(is_active=True).order_by('-created_at')[:3]
+    latest_news = News.objects.filter(is_active=True, category='most_reading_region').order_by('-created_at')[:3]
     
     # Получаем все активные регионы из базы данных
     db_regions = {r.title: r.region_url for r in Region.objects.filter(is_active=True)}
@@ -266,6 +266,8 @@ def contest_detail(request, year=None):
     return render(request, "contest_detail.html", context)
 
 
+from django.core.paginator import Paginator
+
 def contest_detail_default(request):
     last_contest = Contest.objects.order_by('-year').first()
     if last_contest:
@@ -279,3 +281,26 @@ def contest_detail_default(request):
     return redirect('contest_detail', year=year)
 
 
+def news_list(request):
+    category = request.GET.get('category')
+    news_qs = News.objects.filter(is_active=True)
+    
+    if category in ['news', 'most_reading_region']:
+        news_qs = news_qs.filter(category=category)
+        
+    news_qs = news_qs.order_by('-created_at')
+    
+    paginator = Paginator(news_qs, 12)  # 12 новостей на страницу
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, "news_list.html", {
+        "page_obj": page_obj,
+        "selected_category": category or "",
+        "categories": News.CATEGORY_CHOICES
+    })
+
+
+def news_detail(request, slug):
+    news_item = get_object_or_404(News, slug=slug, is_active=True)
+    return render(request, "news_detail.html", {"news": news_item})

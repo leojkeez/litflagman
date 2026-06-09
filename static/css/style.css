@@ -82,12 +82,31 @@ body.menu-open {
   overflow: hidden; /* Запрет скролла при открытом меню */
 }
 
-h1, h2, h3, h4, h5, h6, .fw-bold, .fw-semibold, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+h2, h3, h4, h5, h6, .fw-bold, .fw-semibold {
   font-family: 'Neo Sans Bold', sans-serif;
+}
+
+h1, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  font-family: 'Alumni Sans', sans-serif;
 }
 
 main {
   flex: 1;
+}
+
+/* Breadcrumbs responsive */
+@media (max-width: 768px) {
+  .breadcrumb {
+    font-size: 0.85rem;
+  }
+}
+
+/* Responsive headings */
+@media (max-width: 768px) {
+  h1, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+    font-size: 1.75rem !important;
+    line-height: 1.1 !important;
+  }
 }
 
 /* Header adjustments */
@@ -147,8 +166,21 @@ header.header-main-wrapper {
   font-family: 'Neo Sans Bold', sans-serif;
   font-size: 1.85rem;
   font-weight: bold;
-  color: #212529; /* Темный контрастный цвет */
+  
+  /* Анимированный красный градиент */
+  background: linear-gradient(90deg, #ff000d 0%, #860000 50%, #ff000d 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: logo-red-shimmer 10s linear infinite;
+  
   transition: all 0.3s ease;
+}
+
+@keyframes logo-red-shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: -200% center; }
 }
 
 @media (max-width: 991.98px) {
@@ -198,8 +230,8 @@ header.header-main-wrapper {
 
 @media (max-width: 991.98px) {
   .hero-title {
-    font-size: 42px !important;
-    line-height: 40px !important;
+    font-size: 32px !important;
+    line-height: 1.1 !important;
     margin-bottom: 1rem !important;
   }
   .row.align-items-center.py-5 .lead {
@@ -231,6 +263,32 @@ header.header-main-wrapper {
   right: -20px;
   bottom: -20px;
   transform: rotate(-15deg);
+}
+
+.news-item {
+  position: relative;
+}
+
+.news-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: var(--main-gradient);
+  filter: blur(25px);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.news-item:hover::before {
+  opacity: 0.25;
+  transform: scale(1.01);
+  animation: card-pulse-glow 5s infinite ease-in-out;
 }
 
 .news-item img {
@@ -816,4 +874,19 @@ footer a:hover {
 
 .js-region-item.d-none-search {
   display: none !important;
+}
+
+/* Градиентные HR с анимацией */
+hr.hr-gradient {
+  height: 1px;
+  border: none;
+  background: linear-gradient(90deg, var(--color-turquoise), var(--color-purple), var(--color-turquoise));
+  background-size: 200% auto;
+  opacity: 0.8;
+  animation: hr-shimmer 3s linear infinite;
+}
+
+@keyframes hr-shimmer {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
 }

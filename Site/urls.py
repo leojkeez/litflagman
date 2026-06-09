@@ -7,4 +7,6 @@ urlpatterns = [
     path("region/<slug:slug>/", views.region_detail, name="region_detail"),
     path("<int:year>-contest/", views.contest_detail, name="contest_detail"),
     path("contest/", views.contest_detail_default, name="contest_detail_default"),
+    path("news/", views.news_list, name="news_list"),
+    path("news/<slug:slug>/", views.news_detail, name="news_detail"),
 ]

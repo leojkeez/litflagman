@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Новости проекта — Литфлагман{% endblock %}
+{% block meta_description %}Архив новостей и событий Всероссийского конкурса «Самый читающий регион». Читайте о литературных событиях, книжных фестивалях и проектах регионов.{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Заголовок страницы -->
+  <div class="row mb-5 text-center">
+    <div class="col-12">
+      <h1 class="fw-bold text-dark display-4 mb-2" style="text-transform: uppercase; font-weight: 800;">
+        Новости проекта
+      </h1>
+      <p class="text-muted lead fs-5">Следите за событиями Всероссийского конкурса «Самый читающий регион»</p>
+    </div>
+  </div>
+
+  <!-- Фильтр по категориям -->
+  <div class="row justify-content-center mb-5 text-center">
+    <div class="col-lg-4 col-md-6 col-11">
+      <form method="get" action="{% url 'news_list' %}">
+        <label for="category-select" class="form-label text-muted small text-uppercase fw-bold mb-2" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.15rem; letter-spacing: 0.5px;">Фильтровать новости:</label>
+        <select name="category" id="category-select" class="form-select shortlist-mobile-select m-0 text-center" onchange="this.form.submit()" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.4rem !important; font-weight: 600; cursor: pointer;">
+          <option value="" {% if not selected_category %}selected{% endif %}>Все новости</option>
+          {% for code, name in categories %}
+            <option value="{{ code }}" {% if selected_category == code %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <!-- Сетка новостей -->
+  {% if page_obj %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+      {% for item in page_obj %}
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm rounded-3 news-item transition-all" style="background: #ffffff; border: 1px solid #f1f3f5 !important; transition: all 0.3s ease;">
+            
+            <!-- Изображение новости -->
+            <div style="height: 220px; overflow: hidden; position: relative;" class="bg-light rounded-top-3">
+              {% if item.image_16x10 %}
+                <img src="{{ item.image_16x10.url }}" class="card-img-top w-100 h-100" alt="{{ item.title }}" style="object-fit: cover; transition: transform 0.3s ease;">
+              {% else %}
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted rounded-top-3">
+                  <i class="bi bi-image fs-1"></i>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Тело карточки -->
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+              <div>
+                <!-- Дата создания -->
+                <div class="text-muted small mb-2 d-flex align-items-center">
+                  <i class="bi bi-calendar3 me-1"></i>{{ item.created_at|date:"d E Y" }}
+                </div>
+                <!-- Заголовок -->
+                <h5 class="card-title fw-bold mb-3 text-dark" style="min-height: 56px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Alumni Sans', sans-serif; font-size: 1.55rem; line-height: 1.15;">
+                  <a href="{% url 'news_detail' item.slug %}" class="text-decoration-none text-dark hover-purple transition-all">
+                    {{ item.title|safe }}
+                  </a>
+                </h5>
+                <!-- Краткое описание -->
+                <p class="card-text text-muted small lh-relaxed mb-4" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                  {{ item.short_description|striptags|truncatechars:300 }}
+                </p>
+              </div>
+
+              <!-- Ссылка подробнее -->
+              <div>
+                <a href="{% url 'news_detail' item.slug %}" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 transition-all text-uppercase" style="color: var(--color-purple, #9932CC); font-family: 'Alumni Sans', sans-serif !important; font-size: 1.1rem; letter-spacing: 0.5px; font-weight: 700;">
+                  Подробнее &rarr;
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Пагинация на Bootstrap 5 -->
+    {% if page_obj.has_other_pages %}
+      <div class="row mt-5">
+        <div class="col-12 d-flex justify-content-center">
+          <nav aria-label="Навигация по новостям">
+            <ul class="pagination pagination-md gap-1" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.3rem; font-weight: 700;">
+              
+              <!-- Кнопка Первая / Назад -->
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link rounded-3 border-0 text-dark" href="?page=1&category={{ selected_category }}" aria-label="Первая">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link rounded-3 border-0 text-dark" href="?page={{ page_obj.previous_page_number }}&category={{ selected_category }}" aria-label="Назад">
+                    <span aria-hidden="true">&lsaquo;</span>
+                  </a>
+                </li>
+              {% endif %}
+
+              <!-- Цикл по соседним номерам страниц -->
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <li class="page-item active"><span class="page-link rounded-3 border-0 bg-purple text-white" style="background-color: var(--color-purple, #9932CC) !important;">{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <li class="page-item"><a class="page-link rounded-3 border-0 text-dark" href="?page={{ num }}&category={{ selected_category }}">{{ num }}</a></li>
+                {% endif %}
+              {% endfor %}
+
+              <!-- Кнопка Вперед / Последняя -->
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link rounded-3 border-0 text-dark" href="?page={{ page_obj.next_page_number }}&category={{ selected_category }}" aria-label="Вперед">
+                    <span aria-hidden="true">&rsaquo;</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link rounded-3 border-0 text-dark" href="?page={{ page_obj.paginator.num_pages }}&category={{ selected_category }}" aria-label="Последняя">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                  </a>
+                </li>
+              {% endif %}
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="row my-5">
+      <div class="col-12 text-center text-muted py-5 border rounded-3 bg-light">
+        <i class="bi bi-newspaper display-1 d-block mb-3"></i>
+        <h3>Список новостей пуст</h3>
+        <p>К сожалению, на данный момент нет опубликованных новостей.</p>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

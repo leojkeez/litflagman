@@ -91,25 +91,15 @@
     <!-- Новости конкурса -->
     <div class="news-list mb-4">
       <h5 class="fw-bold mb-3">Новости конкурса</h5>
-      {% for news in latest_news %}
-      <div class="news-item d-flex gap-3 mb-3 pb-3 border-bottom border-light-subtle">
-        {% if news.image_1x1 %}
-        <img src="{{ news.image_1x1.url }}" alt="{{ news.title }}" class="rounded-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">
-        {% else %}
-        <div class="bg-secondary-subtle rounded-3" style="width: 80px; height: 80px;"></div>
-        {% endif %}
-        <div>
-          <h6 class="fw-bold mb-1"><a href="#" class="text-dark text-decoration-none">{{ news.title }}</a></h6>
-          <p class="small text-muted mb-0">{{ news.short_description|truncatechars:80 }}</p>
-        </div>
-      </div>
+      {% for item in latest_news %}
+        {% include 'includes/news_card.html' %}
       {% empty %}
-      <p class="text-muted small">Новостей пока нет.</p>
+        <p class="text-muted small">Новостей пока нет.</p>
       {% endfor %}
     </div>
 
     <!-- Кнопка все новости -->
-    <a href="#" class="btn-main w-50">Все новости</a>
+    <a href="{% url 'news_list' %}" class="btn-main w-50">Все новости</a>
   </div>
 </div>
 

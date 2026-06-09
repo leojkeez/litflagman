@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.seo_title }} — Литфлагман{% endblock %}
+{% block meta_description %}{{ news.seo_descriptor }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Хлебные крошки / Категория -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Главная</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'news_list' %}" class="text-decoration-none text-muted">Новости</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ news.title|truncatechars:40 }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Заголовок новости -->
+  <div class="row mb-2">
+    <div class="col-lg-10 col-12">
+      <h1 class="fw-bold mb-3 text-dark display-5">
+        {{ news.title }}
+      </h1>
+    </div>
+  </div>
+
+  <!-- Дата новости -->
+  <div class="row mb-4">
+    <div class="col-12 text-muted small d-flex align-items-center">
+      <span class="me-3"><i class="bi bi-calendar3 me-1"></i>{{ news.created_at|date:"d E Y" }}</span>
+    </div>
+  </div>
+
+  <hr class="hr-gradient mb-5">
+
+  <!-- Тело новости: Сетка по запросу -->
+  <div class="row justify-content-center justify-content-lg-start g-lg-5">
+    <!-- Левая колонка col-lg-4: Картинка новости -->
+    <div class="col-lg-4 col-12 mb-4 mb-lg-0 text-center">
+      {% if news.image_16x10 %}
+        <img src="{{ news.image_16x10.url }}" class="img-fluid rounded-3 shadow-sm w-100" alt="{{ news.title }}" style="object-fit: cover; max-height: 400px;">
+      {% else %}
+        <div class="bg-light d-flex align-items-center justify-content-center border rounded-3 p-5 text-muted w-100" style="min-height: 250px;">
+          <i class="bi bi-image fs-1 d-block mb-2"></i>
+          <span>Изображение отсутствует</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Правая колонка col-lg-6: Текст новости с классом txt-wide -->
+    <div class="col-lg-6 col-12 txt-wide lh-lg" style="font-size: 1.05rem; color: #333333;">
+      {{ news.full_text|safe }}
+    </div>
+  </div>
+
+  <hr class="hr-gradient my-5">
+
+  <!-- Кнопка возврата к списку новостей -->
+  <div class="row">
+    <div class="col-12 text-start">
+      <a href="{% url 'news_list' %}" class="btn-main">
+        &larr; Назад к новостям
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

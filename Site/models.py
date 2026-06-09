@@ -205,9 +205,11 @@ class News(models.Model):
     CATEGORY_CHOICES = [
         ('news', 'Новость'),
         ('most_reading_region', 'СЧР (самый читающий регион)'),
+        ('forum-fest', 'Фестиваль форум'),
     ]
 
     title = models.CharField("Заголовок", max_length=255)
+    slug = models.SlugField("ЧПУ (Slug)", max_length=255, blank=True, null=True, unique=True)
     short_description = models.TextField("Краткое описание")
     seo_title = models.CharField("Тайтл СЕО", max_length=255)
     seo_descriptor = models.TextField("Дескриптор СЕО")
@@ -218,14 +220,27 @@ class News(models.Model):
         choices=CATEGORY_CHOICES,
         default='news',
     )
-    image_16x10 = models.ImageField("Картинка 16:10", upload_to='news/16x10/%Y/%m/%d/')
-    image_1x1 = models.ImageField("Картинка 1:1", upload_to='news/1x1/%Y/%m/%d/')
+    image_16x10 = models.ImageField("Картинка 16:10", upload_to='news/16x10/%Y/%m/%d/', blank=True, null=True)
+    image_1x1 = models.ImageField("Картинка 1:1", upload_to='news/1x1/%Y/%m/%d/', blank=True, null=True)
     is_active = models.BooleanField("Активна", default=True)
     created_at = models.DateTimeField("Дата создания", auto_now_add=True)
     updated_at = models.DateTimeField("Дата обновления", auto_now=True)
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            slug_base = pytils_slugify(self.title)[:240]
+            if not slug_base:
+                slug_base = "news"
+            slug = slug_base
+            counter = 1
+            while self.__class__.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{slug_base}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Новость"

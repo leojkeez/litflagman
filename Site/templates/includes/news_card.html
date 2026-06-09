@@ -1,0 +1,45 @@
+{% load static %}
+<div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4 news-horizontal-card transition-all" style="background: #ffffff; border: 1px solid #f1f3f5 !important; transition: all 0.3s ease;">
+  <div class="row g-0 align-items-stretch">
+    <!-- Левая колонка: Фото (col-md-4 col-12) -->
+    <div class="col-md-4 col-12 bg-light d-flex align-items-center justify-content-center" style="min-height: 200px; overflow: hidden; position: relative;">
+      {% if item.image_16x10 %}
+        <img src="{{ item.image_16x10.url }}" class="w-100 h-100" alt="{{ item.title }}" style="object-fit: cover; transition: transform 0.3s ease; position: absolute; top: 0; left: 0;">
+      {% else %}
+        <div class="text-muted text-center p-4">
+          <i class="bi bi-image fs-1 d-block mb-1"></i>
+          <span class="small">Изображение отсутствует</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Правая колонка: Текст и кнопка (col-md-8 col-12) -->
+    <div class="col-md-8 col-12 p-4 d-flex flex-column justify-content-between">
+      <div>
+        <!-- Дата публикации -->
+        <div class="text-muted small mb-2 d-flex align-items-center">
+          <i class="bi bi-calendar3 me-1"></i>{{ item.created_at|date:"d E Y" }}
+        </div>
+        
+        <!-- 1 строка: Заголовок -->
+        <h4 class="fw-bold mb-2 text-dark" style="font-size: 1.6rem; font-family: 'Alumni Sans', sans-serif; line-height: 1.15;">
+          <a href="{% url 'news_detail' item.slug %}" class="text-decoration-none text-dark hover-purple transition-all">
+            {{ item.title|safe }}
+          </a>
+        </h4>
+        
+        <!-- 2 строка: Краткое описание (ограничено 300 символами) -->
+        <p class="text-muted small lh-relaxed mb-4">
+          {{ item.short_description|striptags|truncatechars:300 }}
+        </p>
+      </div>
+
+      <!-- 3 строка: Кнопка Подробнее -->
+      <div>
+        <a href="{% url 'news_detail' item.slug %}" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 transition-all text-uppercase" style="color: var(--color-purple, #9932CC); font-family: 'Alumni Sans', sans-serif !important; font-size: 1.1rem; letter-spacing: 0.5px; font-weight: 700;">
+          Подробнее &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
