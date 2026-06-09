@@ -308,6 +308,56 @@ header.header-main-wrapper {
   opacity: 1 !important;
 }
 
+/* Horizontal news card gradient border on hover */
+.news-horizontal-card {
+  position: relative;
+}
+
+.news-horizontal-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid transparent;
+  background: linear-gradient(90deg, var(--color-turquoise) 0%, var(--color-purple) 50%, var(--color-turquoise) 100%) border-box;
+  background-size: 200% auto;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) padding-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: 
+     linear-gradient(#fff 0 0) padding-box, 
+     linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.news-horizontal-card:hover {
+  border-color: transparent !important;
+}
+
+.news-horizontal-card:hover::after {
+  opacity: 1;
+  animation: border-shimmer 3s linear infinite;
+}
+
+@keyframes border-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .transition-all {
   transition: all 0.3s ease;
 }
