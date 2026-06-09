@@ -41,7 +41,7 @@ def partition_regions_by_letters(groups, k=6):
     return cols
 
 def index(request):
-    latest_news = News.objects.filter(is_active=True, category='most_reading_region').order_by('-created_at')[:3]
+    latest_news = News.objects.filter(is_active=True, category='most_reading_region').order_by('-created_at')[:4]
     
     # Получаем все активные регионы из базы данных
     db_regions = {r.title: r.region_url for r in Region.objects.filter(is_active=True)}

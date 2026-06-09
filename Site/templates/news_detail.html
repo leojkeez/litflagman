@@ -2,7 +2,41 @@
 {% load static %}
 
 {% block title %}{{ news.seo_title }} — Литфлагман{% endblock %}
-{% block meta_description %}{{ news.seo_descriptor }}{% endblock %}
+{% block meta_description %}{{ news.seo_descriptor|safe }}{% endblock %}
+{% block meta_keywords %}{{ news.seo_keywords|safe }}{% endblock %}
+
+{% block og_title %}{{ news.seo_title }} — Литфлагман{% endblock %}
+{% block og_description %}{{ news.seo_descriptor|safe }}{% endblock %}
+{% block og_image %}{% if news.image_16x10 %}{{ request.scheme }}://{{ request.get_host }}{{ news.image_16x10.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'logo.png' %}{% endif %}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "{{ news.seo_title|escapejs }}",
+  "description": "{{ news.seo_descriptor|escapejs }}",
+  "image": [
+    {% if news.image_16x10 %}
+      "{{ request.scheme }}://{{ request.get_host }}{{ news.image_16x10.url }}"
+    {% else %}
+      "{{ request.scheme }}://{{ request.get_host }}{% static 'logo.png' %}"
+    {% endif %}
+  ],
+  "datePublished": "{{ news.created_at|date:'c' }}",
+  "author": {
+    "@type": "Organization",
+    "name": "Литфлагман"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Литфлагман",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'logo.png' %}"
+    }
+  }
+}
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
