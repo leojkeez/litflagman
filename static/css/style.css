@@ -358,6 +358,175 @@ header.header-main-wrapper {
   }
 }
 
+/* Custom Category Dropdown */
+.custom-category-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.custom-dropdown-btn {
+  background-color: #f8f9fa !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1.2rem !important;
+  color: #333333 !important;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  box-shadow: none !important;
+  font-family: 'Alumni Sans', sans-serif !important;
+}
+
+.custom-dropdown-btn:focus,
+.custom-dropdown-btn:active,
+.custom-dropdown-btn.show {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Анимированная градиентная рамка в активном состоянии */
+.custom-dropdown-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid transparent;
+  background: linear-gradient(90deg, var(--color-turquoise) 0%, var(--color-purple) 50%, var(--color-turquoise) 100%) border-box;
+  background-size: 200% auto;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) padding-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: 
+     linear-gradient(#fff 0 0) padding-box, 
+     linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.custom-dropdown-btn:focus::before,
+.custom-dropdown-btn:active::before,
+.custom-dropdown-btn.show::before {
+  opacity: 1;
+  animation: border-shimmer 3s linear infinite;
+}
+
+/* Выпадающее меню */
+.custom-dropdown-menu {
+  border: none !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  padding: 0.4rem 0 !important;
+  background-color: #ffffff !important;
+  margin-top: 8px !important;
+  overflow: hidden;
+}
+
+/* Пункты списка */
+.custom-dropdown-menu .dropdown-item {
+  color: #333333 !important;
+  padding: 0.6rem 1.5rem !important;
+  transition: all 0.2s ease;
+  background: transparent !important;
+}
+
+/* Фиолетовая подложка при наведении */
+.custom-dropdown-menu .dropdown-item:hover,
+.custom-dropdown-menu .dropdown-item:focus {
+  background-color: var(--color-purple, #9932CC) !important;
+  color: #ffffff !important;
+}
+
+/* Выбранный пункт */
+.custom-dropdown-menu .dropdown-item.active {
+  background-color: rgba(153, 50, 204, 0.12) !important;
+  color: var(--color-purple, #9932CC) !important;
+  font-weight: 700;
+}
+
+.custom-dropdown-menu .dropdown-item.active:hover {
+  background-color: var(--color-purple, #9932CC) !important;
+  color: #ffffff !important;
+}
+
+/* Custom Pagination Styles */
+.custom-pagination {
+  display: flex;
+  align-items: center;
+}
+
+.custom-pagination-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 15px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  color: #333333 !important;
+  font-family: 'Alumni Sans', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: none !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.custom-pagination-link:hover {
+  background-color: var(--header-footer-bg, #f8f9fa) !important;
+  color: var(--color-purple, #9932CC) !important;
+  box-shadow: none !important;
+}
+
+.page-item.disabled .custom-pagination-link {
+  background-color: #ffffff !important;
+  color: #bbbbbb !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.custom-pagination-link.current {
+  background: transparent !important;
+  color: var(--color-purple, #9932CC) !important;
+  position: relative;
+  z-index: 1;
+  box-shadow: none !important;
+}
+
+.custom-pagination-link.current::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid transparent;
+  background: linear-gradient(90deg, var(--color-turquoise) 0%, var(--color-purple) 50%, var(--color-turquoise) 100%) border-box;
+  background-size: 200% auto;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) padding-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: 
+     linear-gradient(#fff 0 0) padding-box, 
+     linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: border-shimmer 3s linear infinite;
+}
+
 .transition-all {
   transition: all 0.3s ease;
 }

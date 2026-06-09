@@ -354,4 +354,42 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // --- Custom Cursor Follower ---
+  const follower = document.querySelector('.cursor-follower');
+  if (follower) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let followerX = 0;
+    let followerY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (follower.style.opacity === '0' || follower.style.opacity === '') {
+        follower.style.opacity = '1';
+        followerX = mouseX;
+        followerY = mouseY;
+      }
+    });
+
+    document.addEventListener('mouseleave', () => {
+      follower.style.opacity = '0';
+    });
+
+    function animateFollower() {
+      // Плавное следование за мышью
+      let dx = mouseX - followerX;
+      let dy = mouseY - followerY;
+      
+      followerX += dx * 0.1;
+      followerY += dy * 0.1;
+      
+      follower.style.left = followerX + 'px';
+      follower.style.top = followerY + 'px';
+      
+      requestAnimationFrame(animateFollower);
+    }
+    animateFollower();
+  }
 });

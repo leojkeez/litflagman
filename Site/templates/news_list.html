@@ -20,15 +20,28 @@
   <!-- Фильтр по категориям -->
   <div class="row justify-content-center mb-5 text-center">
     <div class="col-lg-4 col-md-6 col-11">
-      <form method="get" action="{% url 'news_list' %}">
-        <label for="category-select" class="form-label text-muted small text-uppercase fw-bold mb-2" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.15rem; letter-spacing: 0.5px;">Фильтровать новости:</label>
-        <select name="category" id="category-select" class="form-select shortlist-mobile-select m-0 text-center" onchange="this.form.submit()" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.4rem !important; font-weight: 600; cursor: pointer;">
-          <option value="" {% if not selected_category %}selected{% endif %}>Все новости</option>
+      <div class="dropdown custom-category-dropdown">
+        <label class="form-label text-muted small text-uppercase fw-bold mb-2" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.15rem; letter-spacing: 0.5px; display: block;">Выберите категорию:</label>
+        <button class="btn w-100 text-center custom-dropdown-btn" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.4rem !important; font-weight: 600;">
+          {% if selected_category %}
+            {% for code, name in categories %}
+              {% if selected_category == code %}{{ name }}{% endif %}
+            {% endfor %}
+          {% else %}
+            Все новости
+          {% endif %}
+        </button>
+        <ul class="dropdown-menu w-100 text-center custom-dropdown-menu border-0 shadow" aria-labelledby="categoryDropdown">
+          <li>
+            <a class="dropdown-item {% if not selected_category %}active{% endif %}" href="?category=" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.3rem; font-weight: 600;">Все новости</a>
+          </li>
           {% for code, name in categories %}
-            <option value="{{ code }}" {% if selected_category == code %}selected{% endif %}>{{ name }}</option>
+            <li>
+              <a class="dropdown-item {% if selected_category == code %}active{% endif %}" href="?category={{ code }}" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.3rem; font-weight: 600;">{{ name }}</a>
+            </li>
           {% endfor %}
-        </select>
-      </form>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -87,42 +100,48 @@
       <div class="row mt-5">
         <div class="col-12 d-flex justify-content-center">
           <nav aria-label="Навигация по новостям">
-            <ul class="pagination pagination-md gap-1" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.3rem; font-weight: 700;">
+            <ul class="pagination pagination-md gap-2 custom-pagination" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.3rem; font-weight: 700;">
               
-              <!-- Кнопка Первая / Назад -->
+              <!-- Кнопка Назад (‹ Пред.) -->
               {% if page_obj.has_previous %}
                 <li class="page-item">
-                  <a class="page-link rounded-3 border-0 text-dark" href="?page=1&category={{ selected_category }}" aria-label="Первая">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
+                  <a class="page-link custom-pagination-link" href="?page={{ page_obj.previous_page_number }}&category={{ selected_category }}" aria-label="Назад">
+                    ‹ Пред.
                   </a>
                 </li>
-                <li class="page-item">
-                  <a class="page-link rounded-3 border-0 text-dark" href="?page={{ page_obj.previous_page_number }}&category={{ selected_category }}" aria-label="Назад">
-                    <span aria-hidden="true">&lsaquo;</span>
-                  </a>
+              {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link custom-pagination-link">
+                    ‹ Пред.
+                  </span>
                 </li>
               {% endif %}
 
-              <!-- Цикл по соседним номерам страниц -->
+              <!-- Цифр-ссылки (текущая, 2 до, 2 после) -->
               {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                  <li class="page-item active"><span class="page-link rounded-3 border-0 bg-purple text-white" style="background-color: var(--color-purple, #9932CC) !important;">{{ num }}</span></li>
+                  <li class="page-item active">
+                    <span class="page-link custom-pagination-link current">{{ num }}</span>
+                  </li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                  <li class="page-item"><a class="page-link rounded-3 border-0 text-dark" href="?page={{ num }}&category={{ selected_category }}">{{ num }}</a></li>
+                  <li class="page-item">
+                    <a class="page-link custom-pagination-link" href="?page={{ num }}&category={{ selected_category }}">{{ num }}</a>
+                  </li>
                 {% endif %}
               {% endfor %}
 
-              <!-- Кнопка Вперед / Последняя -->
+              <!-- Кнопка Вперед (След. ›) -->
               {% if page_obj.has_next %}
                 <li class="page-item">
-                  <a class="page-link rounded-3 border-0 text-dark" href="?page={{ page_obj.next_page_number }}&category={{ selected_category }}" aria-label="Вперед">
-                    <span aria-hidden="true">&rsaquo;</span>
+                  <a class="page-link custom-pagination-link" href="?page={{ page_obj.next_page_number }}&category={{ selected_category }}" aria-label="Вперед">
+                    След. ›
                   </a>
                 </li>
-                <li class="page-item">
-                  <a class="page-link rounded-3 border-0 text-dark" href="?page={{ page_obj.paginator.num_pages }}&category={{ selected_category }}" aria-label="Последняя">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                  </a>
+              {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link custom-pagination-link">
+                    След. ›
+                  </span>
                 </li>
               {% endif %}
 
