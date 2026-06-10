@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from . import views
 from django.urls import path
-from .models import Region, Project, BookTerritory, Club, RegionClubMembership, RegionBookTerritoryMembership, Photo, Slider, HtmlSnippet, SliderPhoto, News, StaticPage, Contest
+from .models import Region, Project, BookTerritory, Club, RegionClubMembership, RegionBookTerritoryMembership, Photo, Slider, HtmlSnippet, SliderPhoto, News, StaticPage, Contest, File
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -223,6 +223,13 @@ class SliderAdmin(admin.ModelAdmin):
     get_generated_html.short_description = "Итоговый сгенерированный HTML-код"
 
 
+@admin.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('title', 'file', 'icon', 'uploaded_at', 'show_on_page')
+    list_filter = ('icon', 'show_on_page', 'uploaded_at')
+    search_fields = ('title', 'file')
+
+
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'is_active', 'created_at')
@@ -230,18 +237,19 @@ class NewsAdmin(admin.ModelAdmin):
     list_editable = ('is_active',)
     search_fields = ('title', 'short_description', 'full_text')
     readonly_fields = ('created_at', 'updated_at')
+    filter_horizontal = ('documents',)
     fieldsets = (
         (None, {
-            'fields': ('title', 'short_description', 'full_text', 'category', 'is_active'),
+            'fields': ('title', 'short_description', 'full_text', 'category', 'is_active', 'created_at', 'updated_at'),
+        }),
+        ('Документы', {
+            'fields': ('documents',),
         }),
         ('SEO', {
             'fields': ('seo_title', 'seo_descriptor'),
         }),
         ('Изображения', {
             'fields': ('image_16x10', 'image_1x1'),
-        }),
-        ('Даты', {
-            'fields': ('created_at', 'updated_at'),
         }),
     )
 

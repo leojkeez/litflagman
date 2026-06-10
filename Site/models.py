@@ -1,5 +1,10 @@
 from django.db import models
 import datetime
+import os
+from django.utils import timezone
+from django.conf import settings
+from urllib.parse import urljoin
+from unidecode import unidecode
 from django.utils.text import slugify
 from django.utils.safestring import mark_safe
 from pytils.translit import slugify as pytils_slugify
@@ -201,6 +206,78 @@ class HtmlSnippet(models.Model):
     get_shortcode.short_description = "Shortcode"
 
 
+# Модель файла
+class File(models.Model):
+    ICON_CHOICES = [
+        ("pdf.png", "PDF"),
+        ("doc.png", "DOC"),
+        ("xls.png", "Excel"),
+        ("zip.png", "Архив"),
+        ("img.png", "Изображение"),
+        ("default.png", "По умолчанию"),
+    ]
+    title = models.CharField(max_length=300, verbose_name="Название файла", blank=True, null=True)
+    file = models.FileField(upload_to='files/')
+    icon = models.CharField(
+        max_length=100,
+        choices=ICON_CHOICES,
+        default="default.png",
+        verbose_name="Иконка"
+    )
+    uploaded_at = models.DateTimeField(default=timezone.now, verbose_name="Дата загрузки")
+    show_on_page = models.BooleanField(default=False, verbose_name="Выводить на странице файлов")
+
+    class Meta:
+        verbose_name = "Файл"
+        verbose_name_plural = "Файлы"
+
+    def __str__(self):
+        return self.file.name
+
+    def direct_url(self):
+        return self.file.url  # автоматически отдаёт URL файла
+
+    def icon_url(self):
+        return urljoin(settings.STATIC_URL, f"file_icons/{self.icon}")
+
+    def save(self, *args, **kwargs):
+        # Сохраняем файл с транслитерацией имени
+        if self.title:
+            base_name = slugify(unidecode(self.title))
+            extension = os.path.splitext(self.file.name)[1]
+            new_filename = f"{base_name}{extension}"
+            file_path = os.path.join("files", new_filename)
+
+            # Проверка на уникальность
+            counter = 1
+            while File.objects.filter(file=file_path).exclude(pk=self.pk).exists():
+                new_filename = f"{base_name}-{counter}{extension}"
+                file_path = os.path.join("files", new_filename)
+                counter += 1
+
+            # Если файл уже сохранен и имя изменилось
+            if self.pk and self.file.name != file_path:
+                try:
+                    old_path = self.file.path
+                    new_path = os.path.join(settings.MEDIA_ROOT, file_path)
+
+                    # Создаем папку, если она не существует
+                    os.makedirs(os.path.dirname(new_path), exist_ok=True)
+
+                    # Проверяем, существует ли файл по новому пути
+                    if not os.path.exists(new_path) and os.path.exists(old_path):
+                        # Перемещаем файл
+                        os.rename(old_path, new_path)
+                        # Обновляем путь к файлу в модели
+                        self.file.name = file_path
+                except (ValueError, OSError):
+                    # Если файл еще не существует на диске или возникла ошибка доступа
+                    pass
+
+        # Сохраняем объект
+        super().save(*args, **kwargs)
+
+
 class News(models.Model):
     CATEGORY_CHOICES = [
         ('news', 'Новость'),
@@ -222,6 +299,7 @@ class News(models.Model):
     )
     image_16x10 = models.ImageField("Картинка 16:10", upload_to='news/16x10/%Y/%m/%d/', blank=True, null=True)
     image_1x1 = models.ImageField("Картинка 1:1", upload_to='news/1x1/%Y/%m/%d/', blank=True, null=True)
+    documents = models.ManyToManyField(File, verbose_name="Документы", blank=True)
     is_active = models.BooleanField("Активна", default=True)
     created_at = models.DateTimeField("Дата создания", auto_now_add=True)
     updated_at = models.DateTimeField("Дата обновления", auto_now=True)
