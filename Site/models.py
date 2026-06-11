@@ -295,7 +295,7 @@ class News(models.Model):
 
     title = models.CharField("Заголовок", max_length=255)
     slug = models.SlugField("ЧПУ (Slug)", max_length=255, blank=True, null=True, unique=True)
-    short_description = models.TextField("Краткое описание")
+    short_description = models.TextField("Краткое описание", blank=True, null=True)
     seo_title = models.CharField("Тайтл СЕО", max_length=255)
     seo_descriptor = models.TextField("Дескриптор СЕО")
     full_text = RichTextField("Полный текст")
