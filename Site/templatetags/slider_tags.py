@@ -11,8 +11,8 @@ register = template.Library()
 SLIDER_REGEX = re.compile(r'\[\[slider:(\d+)\]\]')
 
 
-@register.filter(name='render_shortcodes')
-def render_shortcodes(text):
+@register.filter(name='render_sliders')
+def render_sliders(text):
     if not text:
         return ""
 

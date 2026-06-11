@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load shortcode %}
+{% load shortcode_tags %}
 {% load slider_tags %}
 
 {% block title %}{{ news.seo_title }} — Литфлагман{% endblock %}
@@ -90,7 +90,7 @@
 
     <!-- Правая колонка col-lg-6: Текст новости с классом txt-wide -->
     <div class="col-lg-6 col-12 txt-wide lh-lg" style="font-size: 1.05rem; color: #333333;">
-      {{ news.full_text|safe|shortcode|slider_tags }}
+      {{ news.full_text|safe|render_custom_tags|render_sliders }}
 
       {% if news.documents.all %}
       <div class="row mt-5">
