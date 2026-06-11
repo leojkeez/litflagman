@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Медиаматериалы Фестиваля — Литфлагман{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Заголовок страницы -->
+  <div class="row mb-4 text-center">
+    <div class="col-12">
+      <h1 class="fw-bold text-dark display-4 mb-2" style="text-transform: uppercase; font-weight: 800;">
+        Медиагалерея фестиваля
+      </h1>
+      <p class="text-muted lead fs-5">Все медиаматериалы и видеозаписи Фестиваля-форума «Литературный флагман»</p>
+    </div>
+  </div>
+
+  <!-- Фильтр по категориям -->
+  <div class="row justify-content-center mb-5 text-center">
+    <div class="col-lg-4 col-md-6 col-11">
+      <div class="dropdown custom-category-dropdown">
+        <label class="form-label text-muted small text-uppercase fw-bold mb-2" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.15rem; letter-spacing: 0.5px; display: block;">Выберите категорию:</label>
+        <button class="btn w-100 text-center custom-dropdown-btn" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-family: 'Alumni Sans', sans-serif !important; font-size: 1.4rem !important; font-weight: 600;">
+          {% if selected_category %}
+            {% for code, name in categories %}
+              {% if selected_category == code %}{{ name }}{% endif %}
+            {% endfor %}
+          {% else %}
+            Все материалы
+          {% endif %}
+        </button>
+        <ul class="dropdown-menu w-100 text-center custom-dropdown-menu border-0 shadow" aria-labelledby="categoryDropdown">
+          <li>
+            <a class="dropdown-item {% if not selected_category %}active{% endif %}" href="?category=" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.3rem; font-weight: 600;">Все материалы</a>
+          </li>
+          {% for code, name in categories %}
+            <li>
+              <a class="dropdown-item {% if selected_category == code %}active{% endif %}" href="?category={{ code }}" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.3rem; font-weight: 600;">{{ name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Сетка медиаматериалов (4 строки по 3 сниппета = 12 на страницу) -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+    {% for snippet in page_obj %}
+      <div class="col">
+        <div class="card h-100 border-0 shadow-sm rounded-3 snippet-card p-3 d-flex flex-column justify-content-between" style="background: #ffffff; border: 1px solid #f1f3f5 !important; min-height: 320px;">
+          <div>
+            {% if snippet.title %}
+              <h4 class="h5 mb-3 fw-bold text-dark" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.5rem; line-height: 1.2;">
+                {{ snippet.title }}
+              </h4>
+            {% elif snippet.name %}
+              <h4 class="h5 mb-3 fw-bold text-dark" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.5rem; line-height: 1.2;">
+                {{ snippet.name }}
+              </h4>
+            {% endif %}
+          </div>
+          <div class="snippet-content text-center mt-auto">
+            {{ snippet.html_code|safe }}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted fs-5">Материалы будут опубликованы в ближайшее время.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Пагинация на Bootstrap 5 -->
+  {% if page_obj.has_other_pages %}
+    <div class="row mt-5">
+      <div class="col-12 d-flex justify-content-center">
+        <nav aria-label="Навигация по страницам">
+          <ul class="pagination custom-pagination gap-2">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link custom-pagination-link" href="?page={{ page_obj.previous_page_number }}&category={{ selected_category }}" aria-label="Предыдущая">
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link custom-pagination-link" aria-hidden="true">
+                  <i class="bi bi-chevron-left"></i>
+                </span>
+              </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active">
+                  <span class="page-link custom-pagination-link current">{{ num }}</span>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a class="page-link custom-pagination-link" href="?page={{ num }}&category={{ selected_category }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link custom-pagination-link" href="?page={{ page_obj.next_page_number }}&category={{ selected_category }}" aria-label="Следующая">
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link custom-pagination-link" aria-hidden="true">
+                  <i class="bi bi-chevron-right"></i>
+                </span>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link custom-pagination-link" aria-hidden="true">
+                  <i class="bi bi-chevron-right"></i>
+                </span>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Кнопка возврата на главную фестиваля -->
+  <div class="text-center mt-5">
+    <a href="{% url 'festival' %}" class="btn-main py-3" style="font-size: 1.2rem; font-weight: 700; min-width: 240px;">
+      <i class="bi bi-arrow-left me-2"></i>Вернуться к фестивалю
+    </a>
+  </div>
+
+</div>
+
+<style>
+  /* Сниппеты */
+  .snippet-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .snippet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
+  }
+  .snippet-content iframe {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    border-radius: 6px;
+  }
+</style>
+{% endblock %}

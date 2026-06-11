@@ -189,7 +189,15 @@ class SliderPhoto(models.Model):
         verbose_name_plural = "Фото в слайдерах"
 
 class HtmlSnippet(models.Model):
-    name = models.CharField("Название", max_length=255, default="")
+    CATEGORY_CHOICES = [
+        ('custom_tag', 'Кастомный тег'),
+        ('festival', 'Фестиваль'),
+        ('interview', 'Интервью'),
+        ('intensive', 'Образовательный интенсив'),
+    ]
+    name = models.CharField("Название (для тега)", max_length=255, default="")
+    title = models.CharField("Заголовок", max_length=255, blank=True, null=True)
+    category = models.CharField("Категория", max_length=50, choices=CATEGORY_CHOICES, default='custom_tag')
     html_code = models.TextField("HTML код")
     internal_tag = models.CharField("Тег для внутренней фильтрации", max_length=255)
     is_active = models.BooleanField("Активна", default=True)

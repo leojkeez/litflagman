@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Фестиваль — Литфлагман{% endblock %}
+
+{% block content %}
+<div class="festival-page py-4">
+  
+  <!-- СТРОКА 1: БАННЕР И ОПИСАНИЕ -->
+  <section class="row align-items-center mb-5 pb-4 border-bottom">
+    <div class="col-lg-7 col-12 order-2 order-lg-1">
+      <span class="text-uppercase text-primary fw-bold tracking-wider mb-2 d-inline-block" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.5rem; letter-spacing: 1.5px; color: var(--color-purple, #9932CC) !important;">
+        Фест-форум
+      </span>
+      <h1 class="fw-extrabold display-4 mb-3 text-dark text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-weight: 800; line-height: 1;">
+        Литературный флагман России
+      </h1>
+      <p class="text-muted fs-6 lh-relaxed" style="text-align: justify; font-size: 1rem;">
+        К десятилетию Всероссийского конкурса «Самый читающий регион» на территории региона-победителя, которым в 2023 году стала Республика Татарстан, Российским книжным союзом в 2024 году был организован Фестиваль-форум «Литературный флагман». Участие в мероприятии приняли более 40 регионов России. Мероприятие было ориентировано на профессиональное сообщество и широкую аудиторию и стало своеобразной выставкой достижений в продвижении литературы, книги и чтения, книжной индустрии в целом. Фестиваль-форум прошёл при поддержке Министерства цифрового развития, связи и массовых коммуникаций Российской Федерации, Президентского фонда культурных инициатив, Министерства культуры Республики Татарстан и Республиканского агентства по печати и массовым коммуникациям «Татмедиа».
+      </p>
+    </div>
+    <div class="col-lg-5 col-12 order-1 order-lg-2 mb-4 mb-lg-0 text-center">
+      <img src="{% static 'ban-ff.webp' %}" alt="Баннер Фестиваль-форум" class="img-fluid rounded-3 shadow-sm border border-light" style="max-height: 380px; object-fit: cover; width: 100%;">
+    </div>
+  </section>
+
+  <!-- СТРОКА 2: НОВОСТИ ФЕСТИВАЛЯ -->
+  <section class="mb-5 pb-4 border-bottom">
+    <h2 class="fw-bold mb-4 text-center text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-size: 2.2rem; font-weight: 800;">
+      Новости фестиваля
+    </h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+      {% for item in news_items %}
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm rounded-3 news-item transition-all" style="background: #ffffff; border: 1px solid #f1f3f5 !important; transition: all 0.3s ease;">
+            
+            <!-- Изображение новости -->
+            <div style="height: 200px; overflow: hidden; position: relative;" class="bg-light rounded-top-3">
+              {% if item.image_16x10 %}
+                <img src="{{ item.image_16x10.url }}" class="card-img-top w-100 h-100" alt="{{ item.title }}" style="object-fit: cover; transition: transform 0.3s ease;">
+              {% else %}
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted rounded-top-3">
+                  <i class="bi bi-image fs-1"></i>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Тело карточки -->
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+              <div>
+                <!-- Дата -->
+                <div class="text-muted small mb-2 d-flex align-items-center">
+                  <i class="bi bi-calendar3 me-1"></i>{{ item.created_at|date:"d E Y" }}
+                </div>
+                <!-- Заголовок -->
+                <h5 class="card-title fw-bold mb-3 text-dark" style="min-height: 56px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Alumni Sans', sans-serif; font-size: 1.45rem; line-height: 1.15;">
+                  <a href="{% url 'news_detail' item.slug %}" class="text-decoration-none text-dark hover-purple transition-all">
+                    {{ item.title|safe }}
+                  </a>
+                </h5>
+                <!-- Описание -->
+                <p class="card-text text-muted small lh-relaxed mb-4" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                  {{ item.short_description|striptags|truncatechars:180 }}
+                </p>
+              </div>
+
+              <!-- Подробнее -->
+              <div>
+                <a href="{% url 'news_detail' item.slug %}" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 transition-all text-uppercase" style="color: var(--color-purple, #9932CC); font-family: 'Alumni Sans', sans-serif !important; font-size: 1.1rem; letter-spacing: 0.5px; font-weight: 700;">
+                  Подробнее &rarr;
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-4">
+          <p class="text-muted">Материалы в данной категории обновляются.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Кнопки управления -->
+    <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt-4">
+      <a href="{% url 'news_list' %}?category=forum-fest" class="btn-main py-3 text-center" style="min-width: 240px; font-size: 1.2rem; font-weight: 700;">
+        Все новости
+      </a>
+      <a href="#" class="btn-main py-3 text-center" style="min-width: 240px; font-size: 1.2rem; font-weight: 700;">
+        <i class="bi bi-file-earmark-pdf me-2"></i>Скачать программу в PDF
+      </a>
+    </div>
+  </section>
+
+  <!-- СТРОКА 3: СПИКЕРЫ -->
+  <section class="mb-5 pb-4 border-bottom">
+    <h2 class="fw-bold mb-4 text-center text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-size: 2.2rem; font-weight: 800;">
+      Спикеры фест-форума
+    </h2>
+    
+    <!-- Горизонтальная прокрутка -->
+    <div class="speakers-scroll-container position-relative">
+      <div class="speakers-wrapper d-flex gap-4 pb-3 overflow-auto px-1">
+        {% for speaker in speakers %}
+          <div class="speaker-card flex-shrink-0 text-center" style="width: 210px;">
+            <div class="speaker-img-wrapper mb-3 mx-auto" style="width: 140px; height: 140px; overflow: hidden; border-radius: 50%;">
+              <img src="{% static '' %}{{ speaker.photo|default:'photo-ff/photo.jpg' }}" alt="{{ speaker.name }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://placehold.co/150x150?text=Спикер'">
+            </div>
+            <h5 class="fw-bold mb-1" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.35rem; line-height: 1.1;">
+              {{ speaker.name }}
+            </h5>
+            <p class="text-muted small px-2" style="font-size: 0.8rem; line-height: 1.2;">
+              {{ speaker.position }}
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- СТРОКА 4: ПЛОЩАДКИ -->
+  <section class="mb-5 pb-4 border-bottom">
+    <h2 class="fw-bold mb-4 text-center text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-size: 2.2rem; font-weight: 800;">
+      Площадки проведения
+    </h2>
+    
+    <!-- Горизонтальная прокрутка площадок -->
+    <div class="venues-scroll-container position-relative">
+      <div class="venues-wrapper d-flex gap-4 pb-3 overflow-auto px-1">
+        {% for venue in venues %}
+          <div class="venue-card flex-shrink-0 card border-0 shadow-sm rounded-3" style="width: 240px; transition: transform 0.2s;">
+            <div class="venue-img-wrapper rounded-top-3 overflow-hidden bg-light" style="height: 140px;">
+              <img src="{% static '' %}{{ venue.photo|default:'photo-ff/place/default.jpg' }}" alt="{{ venue.name }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://placehold.co/300x180?text=Площадка'">
+            </div>
+            <div class="card-body p-3">
+              <h6 class="fw-bold text-dark mb-1" style="font-size: 1.1rem; font-family: 'Alumni Sans', sans-serif; font-weight: 700; height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.1;">
+                {{ venue.name }}
+              </h6>
+              <p class="text-muted mb-0" style="font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" title="{{ venue.address }}">
+                <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                {{ venue.address }}
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- СТРОКА 5: HTML СНИППЕТЫ (МЕДИА) -->
+  <section class="mb-4">
+    <h2 class="fw-bold mb-4 text-center text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-size: 2.2rem; font-weight: 800;">
+      Медиаматериалы
+    </h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4 justify-content-center">
+      {% for snippet in snippets %}
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm rounded-3 snippet-card p-3 d-flex flex-column justify-content-between" style="background: #ffffff; border: 1px solid #f1f3f5 !important;">
+            {% if snippet.title %}
+              <h4 class="h5 mb-3 fw-bold text-dark" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.35rem;">
+                {{ snippet.title }}
+              </h4>
+            {% elif snippet.name %}
+              <h4 class="h5 mb-3 fw-bold text-dark" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.35rem;">
+                {{ snippet.name }}
+              </h4>
+            {% endif %}
+            <div class="snippet-content text-center">
+              {{ snippet.html_code|safe }}
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center">
+          <p class="text-muted">Материалы будут опубликованы в ближайшее время.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Кнопка перехода к медиагалерее -->
+    <div class="text-center mt-4">
+      <a href="{% url 'fest_media' %}" class="btn-main py-3" style="font-size: 1.2rem; font-weight: 700; min-width: 240px;">
+        Смотреть медиа
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  .hover-purple:hover {
+    color: var(--color-purple, #9932CC) !important;
+  }
+  
+  /* Скроллбар для спикеров */
+  .speakers-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-purple, #9932CC) #f1f3f5;
+  }
+  .speakers-wrapper::-webkit-scrollbar {
+    height: 8px;
+  }
+  .speakers-wrapper::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 10px;
+  }
+  .speakers-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--color-purple, #9932CC);
+    border-radius: 10px;
+  }
+  
+  /* Скроллбар для площадок */
+  .venues-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-purple, #9932CC) #f1f3f5;
+  }
+  .venues-wrapper::-webkit-scrollbar {
+    height: 8px;
+  }
+  .venues-wrapper::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 10px;
+  }
+  .venues-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--color-purple, #9932CC);
+    border-radius: 10px;
+  }
+
+  /* Спикеры */
+  .speaker-card {
+    transition: transform 0.3s ease;
+  }
+  .speaker-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Площадки */
+  .venue-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+  }
+
+  /* Сниппеты */
+  .snippet-content iframe {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    border-radius: 6px;
+  }
+</style>
+{% endblock %}

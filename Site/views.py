@@ -2,7 +2,250 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q, Prefetch
 import datetime
-from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto
+from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto, HtmlSnippet
+
+def festival(request):
+    snippets = HtmlSnippet.objects.filter(category='festival', is_active=True)[:3]
+    news_items = News.objects.filter(category='forum-fest', is_active=True).order_by('-created_at')[:3]
+    
+    speakers = [
+        {
+            "name": "Ирина Хуснутдинова",
+            "position": "Директор Благотворительного фонда «Счастливые истории»",
+            "photo": "photo-ff/khusnutdinova.jpg"
+        },
+        {
+            "name": "Мария Веденяпина",
+            "position": "Директор Российской государственной детской библиотеки",
+            "photo": "photo-ff/vedenyapina.jpg"
+        },
+        {
+            "name": "Ольга Коле",
+            "position": "Писатель, телеведущая",
+            "photo": "photo-ff/kole.jpg"
+        },
+        {
+            "name": "Илья Таранов",
+            "position": "Член Союза писателей России, заместитель председателя Ульяновского регионального отделения Союза писателей России, исполнительный директор Ульяновского Фонда поддержки детского чтения",
+            "photo": "photo-ff/taranov.jpg"
+        },
+        {
+            "name": "Наталья Чупрова",
+            "position": "Поэтесса и прозаик, автор Народного литературного объединения «Заполярье»",
+            "photo": "photo-ff/chuprova.jpg"
+        },
+        {
+            "name": "Ирина Селиверстова",
+            "position": "прозаик, член Народного литературного объединения «Заполярье», художник-иллюстратор",
+            "photo": "photo-ff/seliverstova.jpg"
+        },
+        {
+            "name": "Евгений Шестов",
+            "position": "член Союза детских и юношеских писателей РФ",
+            "photo": "photo-ff/shestov.jpg"
+        },
+        {
+            "name": "Ленар Шаех",
+            "position": "главный редактор Татарского книжного издательства",
+            "photo": "photo-ff/shayekh.jpg"
+        },
+        {
+            "name": "Зиннур Мансуров",
+            "position": "татарский поэт, журналист, публицист",
+            "photo": "photo-ff/mansurov.jpg"
+        },
+        {
+            "name": "Хабир Ибрагимов",
+            "position": "татарский литератор, сценарист, драматург, публицист, переводчик",
+            "photo": "photo-ff/ibragimov.jpg"
+        },
+        {
+            "name": "Марсель Галиев",
+            "position": "татарский прозаик, поэт, член Союза писателей Республики Татарстан",
+            "photo": "photo-ff/galiev.jpg"
+        },
+        {
+            "name": "Оксана Сусорова",
+            "position": "финалист драматургических конкурсов «Крупица истории», «Время драмы» (г. Москва), шорт-листер конкурса издательства «Настя и Никита» (г. Москва)",
+            "photo": "photo-ff/susorova.jpg"
+        },
+        {
+            "name": "Александр Черников",
+            "position": "Директор АНО «Сибирский институт развития креативных индустрий»",
+            "photo": "photo-ff/chernikov.jpg"
+        },
+        {
+            "name": "Денис Кравченко",
+            "position": "Первый заместитель председателя комитета Государственной Думы Российской Федерации по экономической политике",
+            "photo": "photo-ff/kravchenko.jpg"
+        },
+        {
+            "name": "Владимир Григорьев",
+            "position": "директор Департамента государственной поддержки периодической печати и книжной индустрии",
+            "photo": "photo-ff/grigoriev.jpg"
+        },
+        {
+            "name": "Сергей Степашин",
+            "position": "Президент Российского книжного союза",
+            "photo": "photo-ff/stepashin.jpg"
+        },
+        {
+            "name": "Минтимер Шаймиев",
+            "position": "Государственный советник Республики Татарстан, Посол Доброй воли ЮНЕСКО, Председатель Попечительского совета Республиканского Фонда «Возрождение»",
+            "photo": "photo-ff/shaimiev.jpg"
+        },
+        {
+            "name": "Ульяна Гаврицкая",
+            "position": "бренд-директор книжной сети «Буквоед»",
+            "photo": "photo-ff/gavritskaya.jpg"
+        },
+        {
+            "name": "Алсу Абульханова",
+            "position": "Заслуженная артистка республики Татарстан, телеведущая",
+            "photo": "photo-ff/abulkhanova.jpg"
+        },
+        {
+            "name": "Инна Касенова",
+            "position": "Категорийный директор книжных департаментов сетей «Республика» (Россия, Москва) и «Меломан» (Республика Казахстан)",
+            "photo": "photo-ff/kasenova.jpg"
+        }
+    ]
+
+    venues = [
+        {
+            "name": "Казанское художественное училище имени Н.И. Фешина",
+            "address": "ул. К. Маркса, 70, Казань",
+            "photo": "photo-ff/place/feshina.jpg"
+        },
+        {
+            "name": "Казанский приволжский федеральный университет",
+            "address": "ул. Кремлёвская, 18, корп. 1, Казань",
+            "photo": "photo-ff/place/kpfu.jpg"
+        },
+        {
+            "name": "Филиал №27 МБУК «Централизованная библиотечная система г. Казани»",
+            "address": "ул. Г. Баруди, 25, Казань",
+            "photo": "photo-ff/place/filial_27.jpg"
+        },
+        {
+            "name": "Книжный магазин «Читай-город», ТЦ Кольцо",
+            "address": "ул. Петербургская, 1, Казань",
+            "photo": "photo-ff/place/chitay_gorod_koltso.jpg"
+        },
+        {
+            "name": "Филиал №26 МБУК «Централизованная библиотечная система г. Казани»",
+            "address": "ул. Клары Цеткин, 11, Казань",
+            "photo": "photo-ff/place/filial_26.jpg"
+        },
+        {
+            "name": "ГБУК РТ «Республиканская юношеская библиотека»",
+            "address": "пр. Ибрагимова, 53Б, Казань",
+            "photo": "photo-ff/place/ryb.jpg"
+        },
+        {
+            "name": "Литературное кафе в здании ТАТМЕДИА",
+            "address": "ул. Декабристов, 2, Казань",
+            "photo": "photo-ff/place/lit_cafe_tatmedia.jpg"
+        },
+        {
+            "name": "Книжный магазин «Книга+», ТЦ Южный",
+            "address": "пр. Победы, 91, Казань",
+            "photo": "photo-ff/place/kniga_plus_yuzhny.jpg"
+        },
+        {
+            "name": "Магазин «Татарского книжного издательства», ТЦ ГУМ",
+            "address": "ул. Баумана, 51, Казань",
+            "photo": "photo-ff/place/tat_kniga_gum.jpg"
+        },
+        {
+            "name": "Дом татарской книги",
+            "address": "ул. Островского, 15, Казань",
+            "photo": "photo-ff/place/dom_tat_knigi.jpg"
+        },
+        {
+            "name": "«Китап-club»",
+            "address": "ул. Баумана, 19, Казань",
+            "photo": "photo-ff/place/kitap_club.jpg"
+        },
+        {
+            "name": "Детский оздоровительный лагерь «Молодежный»",
+            "address": "Высокогорский район, Красносельское сельское поселение",
+            "photo": "photo-ff/place/dol_molodezhny.jpg"
+        },
+        {
+            "name": "«Республиканская детская библиотека им. Р. Миннуллина»",
+            "address": "пр. Ямашева, 81, Казань",
+            "photo": "photo-ff/place/rdb_minnullina.jpg"
+        },
+        {
+            "name": "Филиал №13 МБУК «Централизованная библиотечная система г. Казани»",
+            "address": "ул. Х. Мавлютова, 17Б, Казань",
+            "photo": "photo-ff/place/filial_13.jpg"
+        },
+        {
+            "name": "ГБУК РТ «Национальная библиотека Республики Татарстан»",
+            "address": "ул. Пушкина, 86, Казань",
+            "photo": "photo-ff/place/nl_rt.jpg"
+        },
+        {
+            "name": "Культурный центр «Смена»",
+            "address": "ул. Бурхана Шахиди, 7, Казань",
+            "photo": "photo-ff/place/smena.jpg"
+        },
+        {
+            "name": "Детский оздоровительный лагерь «Мирас-Наследие»",
+            "address": "Зеленодольский район, Айшинское сельское поселение",
+            "photo": "photo-ff/place/dol_miras.jpg"
+        },
+        {
+            "name": "Книжный магазин «Читай-город», ТРЦ «Горки-Парк»",
+            "address": "ул. Рихарда Зорге, 11Б, Казань",
+            "photo": "photo-ff/place/chitay_gorod_gorki.jpg"
+        },
+        {
+            "name": "Институт филологии и межкультурной коммуникации",
+            "address": "ул. Татарстан, 2, Казань",
+            "photo": "photo-ff/place/ifmk.jpg"
+        },
+        {
+            "name": "Студия центрального эфира",
+            "address": "Студия центрального эфира",
+            "photo": "photo-ff/place/studio_central.jpg"
+        }
+    ]
+    
+    return render(request, 'festival.html', {
+        'snippets': snippets,
+        'news_items': news_items,
+        'speakers': speakers,
+        'venues': venues
+    })
+
+def fest_media(request):
+    from django.core.paginator import Paginator
+    
+    categories = HtmlSnippet.CATEGORY_CHOICES
+    selected_category = request.GET.get('category', '')
+    
+    snippets_list = HtmlSnippet.objects.filter(is_active=True)
+    if selected_category:
+        snippets_list = snippets_list.filter(category=selected_category)
+    else:
+        # По умолчанию выводим 'festival', 'interview', 'intensive' или все.
+        # Покажем все активные сниппеты
+        pass
+        
+    snippets_list = snippets_list.order_by('-id')
+    paginator = Paginator(snippets_list, 12)  # 12 сниппетов на страницу (4 строки по 3 сниппета)
+    
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'fest-media.html', {
+        'page_obj': page_obj,
+        'categories': categories,
+        'selected_category': selected_category
+    })
 
 def partition_regions_by_letters(groups, k=6):
     n = len(groups)

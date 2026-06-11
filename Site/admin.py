@@ -152,7 +152,8 @@ class PhotoAdmin(admin.ModelAdmin):
 
 @admin.register(HtmlSnippet)
 class HtmlSnippetAdmin(admin.ModelAdmin):
-    list_display = ("name", "get_shortcode", "internal_tag")
+    list_display = ("name", "title", "category", "get_shortcode", "internal_tag", "is_active")
+    list_filter = ("category", "is_active")
     readonly_fields = ("get_shortcode",)
 
 
