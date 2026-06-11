@@ -526,7 +526,8 @@ def news_list(request):
     category = request.GET.get('category')
     news_qs = News.objects.filter(is_active=True)
     
-    if category in ['news', 'most_reading_region']:
+    valid_categories = [code for code, name in News.CATEGORY_CHOICES]
+    if category in valid_categories:
         news_qs = news_qs.filter(category=category)
         
     news_qs = news_qs.order_by('-created_at')
