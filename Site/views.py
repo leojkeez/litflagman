@@ -224,16 +224,14 @@ def festival(request):
 def fest_media(request):
     from django.core.paginator import Paginator
     
-    categories = HtmlSnippet.CATEGORY_CHOICES
+    # Исключаем 'custom_tag' (Кастомный тег) из выпадающего списка категорий
+    categories = [cat for cat in HtmlSnippet.CATEGORY_CHOICES if cat[0] != 'custom_tag']
     selected_category = request.GET.get('category', '')
     
-    snippets_list = HtmlSnippet.objects.filter(is_active=True)
+    # Исключаем 'custom_tag' из выборки сниппетов для этой страницы
+    snippets_list = HtmlSnippet.objects.filter(is_active=True).exclude(category='custom_tag')
     if selected_category:
         snippets_list = snippets_list.filter(category=selected_category)
-    else:
-        # По умолчанию выводим 'festival', 'interview', 'intensive' или все.
-        # Покажем все активные сниппеты
-        pass
         
     snippets_list = snippets_list.order_by('-id')
     paginator = Paginator(snippets_list, 12)  # 12 сниппетов на страницу (4 строки по 3 сниппета)
