@@ -7,7 +7,7 @@
 <div class="festival-page py-4">
   
   <!-- СТРОКА 1: БАННЕР И ОПИСАНИЕ -->
-  <section class="row align-items-center mb-5 pb-4 border-bottom">
+  <section class="row align-items-center mb-5 pb-4">
     <div class="col-lg-7 col-12 order-2 order-lg-1">
       <span class="text-uppercase text-primary fw-bold tracking-wider mb-2 d-inline-block" style="font-family: 'Alumni Sans', sans-serif; font-size: 1.5rem; letter-spacing: 1.5px; color: var(--color-purple, #9932CC) !important;">
         Фест-форум
@@ -23,6 +23,8 @@
       <img src="{% static 'ban-ff.webp' %}" alt="Баннер Фестиваль-форум" class="img-fluid rounded-3 shadow-sm border border-light" style="max-height: 380px; object-fit: cover; width: 100%;">
     </div>
   </section>
+
+  <hr class="hr-gradient mb-5">
 
   <!-- СТРОКА 2: НОВОСТИ ФЕСТИВАЛЯ -->
   <section class="mb-5 pb-4 border-bottom">
@@ -86,7 +88,7 @@
       <a href="{% url 'news_list' %}?category=forum-fest" class="btn-main py-3 text-center" style="min-width: 240px; font-size: 1.2rem; font-weight: 700;">
         Все новости
       </a>
-      <a href="#" class="btn-main py-3 text-center" style="min-width: 240px; font-size: 1.2rem; font-weight: 700;">
+      <a href="/media/uploads/programma-ff.pdf" class="btn-main py-3 text-center" style="min-width: 240px; font-size: 1.2rem; font-weight: 700;">
         <i class="bi bi-file-earmark-pdf me-2"></i>Скачать программу в PDF
       </a>
     </div>
