@@ -315,6 +315,12 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
+    def get_previous(self):
+        return News.objects.filter(is_active=True, created_at__lt=self.created_at).order_by('-created_at').first()
+
+    def get_next(self):
+        return News.objects.filter(is_active=True, created_at__gt=self.created_at).order_by('created_at').first()
+
     def save(self, *args, **kwargs):
         if not self.slug:
             slug_base = pytils_slugify(self.title)[:240]

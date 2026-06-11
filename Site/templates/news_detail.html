@@ -130,14 +130,44 @@
 
   <hr class="hr-gradient my-5">
 
-  <!-- Кнопка возврата к списку новостей -->
-  <div class="row">
-    <div class="col-12 text-start">
+  <!-- Кнопка возврата к списку новостей + Предыдущая/Следующая новости -->
+  <div class="row align-items-center">
+    <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <!-- Назад к списку -->
       <a href="{% url 'news_list' %}" class="btn-main">
         &larr; Назад к новостям
       </a>
+      
+      <!-- Стрелки навигации -->
+      <div class="d-flex align-items-center gap-3">
+        {% with prev_news=news.get_previous %}
+          {% if prev_news %}
+            <a href="{% url 'news_detail' prev_news.slug %}" class="news-nav-link d-flex align-items-center justify-content-center p-2 rounded-circle border" title="Предыдущая: {{ prev_news.title }}" style="width: 45px; height: 45px; transition: all 0.3s ease; border-color: #dee2e6 !important;">
+              <img src="{% static 'arrow-left.png' %}" alt="Предыдущая новость" style="width: 20px; height: auto;">
+            </a>
+          {% endif %}
+        {% endwith %}
+
+        {% with next_news=news.get_next %}
+          {% if next_news %}
+            <a href="{% url 'news_detail' next_news.slug %}" class="news-nav-link d-flex align-items-center justify-content-center p-2 rounded-circle border" title="Следующая: {{ next_news.title }}" style="width: 45px; height: 45px; transition: all 0.3s ease; border-color: #dee2e6 !important;">
+              <img src="{% static 'arrow-right.png' %}" alt="Следующая новость" style="width: 20px; height: auto;">
+            </a>
+          {% endif %}
+        {% endwith %}
+      </div>
     </div>
   </div>
+
+  <style>
+    .news-nav-link:hover {
+      background-color: var(--header-footer-bg, #f8f9fa);
+      border-color: var(--color-purple, #9932CC) !important;
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(153, 50, 204, 0.15);
+    }
+  </style>
+
 
 </div>
 {% endblock %}
