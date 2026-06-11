@@ -149,6 +149,8 @@
   .carousel-thumbnails {
     max-width: 100%;
     scrollbar-width: none; /* Скрываем стандартный скроллбар в Firefox */
+    padding-top: 8px; /* Отступ сверху, чтобы превью не обрезались при увеличении и подъеме вверх */
+    padding-bottom: 8px; /* Отступ снизу для баланса */
   }
   .carousel-thumbnails::-webkit-scrollbar {
     display: none; /* Скрываем скроллбар в Chrome/Safari */
@@ -161,9 +163,12 @@
     cursor: pointer;
     border-radius: 6px;
     overflow: hidden;
-    border: 2px solid transparent;
+    border: 2px solid transparent !important;
+    background-origin: border-box !important;
+    background-clip: padding-box, border-box !important;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(#dee2e6, #dee2e6) !important;
     opacity: 0.5;
-    transition: all 0.25s ease;
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
   .thumbnail-item img {
@@ -174,9 +179,12 @@
   
   .thumbnail-item.active, .thumbnail-item:hover {
     opacity: 1;
-    border-color: var(--color-purple, #9932CC) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(153, 50, 204, 0.25);
+    /* Плавный переливающийся градиент подсветки */
+    background-image: linear-gradient(#fff, #fff), linear-gradient(90deg, var(--color-turquoise) 0%, var(--color-purple) 50%, var(--color-turquoise) 100%) !important;
+    background-size: auto, 200% auto !important;
+    animation: border-shimmer 3s linear infinite;
+    transform: translateY(-4px); /* Подъем чуть выше */
+    box-shadow: 0 4px 12px rgba(153, 50, 204, 0.3);
   }
   
   @media (max-width: 991.98px) {
