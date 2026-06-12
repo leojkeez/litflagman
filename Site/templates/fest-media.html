@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/festival.css' %}">
+{% endblock %}
+
 {% block title %}Медиаматериалы Фестиваля — Литфлагман{% endblock %}
 
 {% block content %}
@@ -132,20 +136,4 @@
 
 </div>
 
-<style>
-  /* Сниппеты */
-  .snippet-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .snippet-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
-  }
-  .snippet-content iframe {
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-    border-radius: 6px;
-  }
-</style>
 {% endblock %}

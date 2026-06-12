@@ -1,7 +1,67 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Фестиваль — Литфлагман{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/festival.css' %}">
+{% endblock %}
+
+{% block title %}Фестиваль-форум «Литературный флагман» — Литфлагман{% endblock %}
+{% block meta_description %}Официальная страница Фестиваля-форума «Литературный флагман». Крупнейшее событие книжной индустрии: новости, ведущие спикеры, площадки в Казани и медиаматериалы.{% endblock %}
+{% block meta_keywords %}фестиваль литературный флагман, книжный форум казань, самый читающий регион, российский книжный союз, книжная индустрия россии{% endblock %}
+
+{% block og_title %}Фестиваль-форум «Литературный флагман России»{% endblock %}
+{% block og_description %}К десятилетию Всероссийского конкурса «Самый читающий регион» в Казани прошел масштабный фестиваль «Литературный флагман». Спикеры, площадки и медиаматериалы события.{% endblock %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'ban-ff.webp' %}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "Фестиваль-форум «Литературный флагман России»",
+  "description": "Фестиваль-форум к десятилетию Всероссийского конкурса «Самый читающий регион». Выставка достижений в продвижении литературы, книги и чтения.",
+  "startDate": "2024-05-23T10:00:00+03:00",
+  "endDate": "2024-05-25T20:00:00+03:00",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "Национальная библиотека Республики Татарстан",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "ул. Пушкина, 86",
+      "addressLocality": "Казань",
+      "addressRegion": "Республика Татарстан",
+      "addressCountry": "RU"
+    }
+  },
+  "image": [
+    "{{ request.scheme }}://{{ request.get_host }}{% static 'ban-ff.webp' %}"
+  ],
+  "organizer": {
+    "@type": "Organization",
+    "name": "Российский книжный союз",
+    "url": "https://bookunion.ru"
+  },
+  "performer": [
+    {% for speaker in speakers|slice:":5" %}
+    {
+      "@type": "Person",
+      "name": "{{ speaker.name }}",
+      "jobTitle": "{{ speaker.position }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "subEvent": [
+    {% for item in news_items %}
+    {
+      "@type": "Event",
+      "name": "{{ item.title|striptags }}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'news_detail' item.slug %}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+{% endblock %}
 
 {% block content %}
 <div class="festival-page py-4">
@@ -158,6 +218,42 @@
     </div>
   </section>
 
+  <!-- СТРОКА: ПАРТНЕРЫ -->
+  <section class="mb-5 pb-4 border-bottom">
+    <h2 class="fw-bold mb-5 text-center text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-size: 2.2rem; font-weight: 800;">
+      Генеральные партнеры
+    </h2>
+    <div class="row align-items-center justify-content-center g-4 px-3 flex-nowrap-lg">
+      
+      <!-- Иконки партнеров -->
+      <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center gap-4 flex-wrap">
+        <img src="{% static 'partners_icon/min-c.png' %}" alt="Минцифры России" class="partner-icon-ff" style="max-height: 55px;">
+        <img src="{% static 'partners_icon/fond-k-i.png' %}" alt="Президентский фонд культурных инициатив" class="partner-icon-ff" style="max-height: 55px;">
+        <img src="{% static 'partners_icon/min-k.png' %}" alt="Министерство культуры Республики Татарстан" class="partner-icon-ff" style="max-height: 55px;">
+        <img src="{% static 'partners_icon/tat.png' %}" alt="Татмедиа" class="partner-icon-ff" style="max-height: 55px;">
+      
+      
+      <!-- Вертикальный разделитель (только для десктопа) -->
+      <div class="col-auto d-none d-lg-block px-2">
+        <div style="width: 1.5px; height: 60px; background: linear-gradient(to bottom, transparent, #dee2e6, transparent);"></div>
+      </div>
+      
+      <!-- Блок ВК -->
+      <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center gap-3 mt-3">
+        <img src="{% static 'partners_icon/VK-logo.png' %}" alt="ВКонтакте" style="width: 45px; height: auto;" class="partner-icon-ff">
+        <div class="vk-text-block">
+          <p class="mb-0 small lh-sm text-dark fw-medium">
+            Официальная социальная сеть Фест-форума «Литературный флагман России» — ВКонтакте.
+          </p>
+          <a href="https://vk.com/litflagman" target="_blank" class="text-primary fw-bold text-decoration-none small">
+            Следите за мероприятиями в сообществе: vk.com/litflagman
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- СТРОКА 5: ПЛОЩАДКИ -->
   <section class="mb-4">
     <h2 class="fw-bold mb-4 text-center text-uppercase" style="font-family: 'Alumni Sans', sans-serif; font-size: 2.2rem; font-weight: 800;">
@@ -189,122 +285,5 @@
 
 </div>
 
-<script>
-  // Скрипт для прокрутки мышкой (drag-to-scroll) на ПК версии
-  document.addEventListener("DOMContentLoaded", function() {
-    const containers = document.querySelectorAll('.speakers-wrapper, .venues-wrapper');
-    
-    containers.forEach(container => {
-      let isDown = false;
-      let startX;
-      let scrollLeft;
-      
-      container.addEventListener('mousedown', (e) => {
-        isDown = true;
-        container.classList.add('active-drag');
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-      });
-      
-      container.addEventListener('mouseleave', () => {
-        isDown = false;
-        container.classList.remove('active-drag');
-      });
-      
-      // Слушаем отпускание кнопки мыши на уровне всего окна, чтобы избежать залипания
-      window.addEventListener('mouseup', () => {
-        if (isDown) {
-          isDown = false;
-          container.classList.remove('active-drag');
-        }
-      });
-      
-      container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2; // скорость скролла
-        container.scrollLeft = scrollLeft - walk;
-      });
-
-      // Отключаем дефолтное поведение перетаскивания (картинок, ссылок),
-      // которое перехватывает фокус браузера и ломает событие mouseup
-      container.addEventListener('dragstart', (e) => {
-        e.preventDefault();
-      });
-    });
-  });
-</script>
-
-<style>
-  .hover-purple:hover {
-    color: var(--color-purple, #9932CC) !important;
-  }
-  
-  /* Скроллбар для спикеров */
-  .speakers-wrapper {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-purple, #9932CC) #f1f3f5;
-    cursor: grab;
-    user-select: none;
-  }
-  .speakers-wrapper.active-drag {
-    cursor: grabbing;
-  }
-  .speakers-wrapper::-webkit-scrollbar {
-    height: 8px;
-  }
-  .speakers-wrapper::-webkit-scrollbar-track {
-    background: #f1f3f5;
-    border-radius: 10px;
-  }
-  .speakers-wrapper::-webkit-scrollbar-thumb {
-    background-color: var(--color-purple, #9932CC);
-    border-radius: 10px;
-  }
-  
-  /* Скроллбар для площадок */
-  .venues-wrapper {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-purple, #9932CC) #f1f3f5;
-    cursor: grab;
-    user-select: none;
-  }
-  .venues-wrapper.active-drag {
-    cursor: grabbing;
-  }
-  .venues-wrapper::-webkit-scrollbar {
-    height: 8px;
-  }
-  .venues-wrapper::-webkit-scrollbar-track {
-    background: #f1f3f5;
-    border-radius: 10px;
-  }
-  .venues-wrapper::-webkit-scrollbar-thumb {
-    background-color: var(--color-purple, #9932CC);
-    border-radius: 10px;
-  }
-
-  /* Спикеры */
-  .speaker-card {
-    transition: transform 0.3s ease;
-  }
-  .speaker-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  /* Площадки */
-  .venue-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
-  }
-
-  /* Сниппеты */
-  .snippet-content iframe {
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-    border-radius: 6px;
-  }
-</style>
+<script src="{% static 'js/festival.js' %}"></script>
 {% endblock %}

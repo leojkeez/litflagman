@@ -1,0 +1,106 @@
+.hover-purple:hover {
+  color: var(--color-purple, #9932CC) !important;
+}
+
+/* Скроллбар для спикеров */
+.speakers-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-purple, #9932CC) #f1f3f5;
+  cursor: grab;
+  user-select: none;
+  padding-top: 15px; /* Пространство для подъема карточек при наведении */
+  padding-bottom: 10px;
+}
+.speakers-wrapper.active-drag {
+  cursor: grabbing;
+}
+.speakers-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.speakers-wrapper::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 10px;
+}
+.speakers-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--color-purple, #9932CC);
+  border-radius: 10px;
+}
+
+/* Скроллбар для площадок */
+.venues-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-purple, #9932CC) #f1f3f5;
+  cursor: grab;
+  user-select: none;
+  padding-top: 15px; /* Пространство для расширения карточек при наведении */
+  padding-bottom: 10px;
+}
+.venues-wrapper.active-drag {
+  cursor: grabbing;
+}
+.venues-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.venues-wrapper::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 10px;
+}
+.venues-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--color-purple, #9932CC);
+  border-radius: 10px;
+}
+
+/* Спикеры */
+.speaker-card {
+  transition: transform 0.3s ease;
+}
+.speaker-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Площадки */
+.venue-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+}
+
+/* Сниппеты */
+.snippet-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.snippet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
+}
+.snippet-content iframe {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+}
+
+/* Партнеры */
+.partner-icon-ff {
+  max-height: 80px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.4s ease;
+}
+
+.partner-icon-ff:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.vk-partner-card {
+  transition: all 0.3s ease;
+  border-color: #e9ecef !important;
+}
+
+.vk-partner-card:hover {
+  background-color: #fff !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-color: #0077ff !important;
+}
