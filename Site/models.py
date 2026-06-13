@@ -44,6 +44,10 @@ class Region(models.Model):
         return self.title or ""
 
     def save(self, *args, **kwargs):
+        # Если svg_id пустая строка, сохраняем как None для корректной работы unique=True
+        if self.svg_id == '':
+            self.svg_id = None
+
         # Если region_url пустой (был стерт или не заполнен)
         if not self.region_url:
             if self.title:
