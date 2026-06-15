@@ -190,6 +190,7 @@
     background-origin: border-box !important;
     background-clip: padding-box, border-box !important;
     color: #212529 !important;
+    width: 50% !important; /* 50% width on desktop */
   }
 
   .elastic-carousel-btn:hover:not(:disabled) {
@@ -211,7 +212,7 @@
   @media (min-width: 768px) {
     .elastic-carousel-item-wrapper:hover,
     .elastic-carousel-item-wrapper.active {
-      flex: 3;
+      flex: 2.2; /* Slightly narrower expanded width than 3 */
     }
 
     .elastic-carousel-container:hover .elastic-carousel-item-wrapper:not(:hover),
@@ -242,7 +243,7 @@
     .elastic-carousel-item-wrapper.active .elastic-carousel-header {
       align-items: flex-start;
       text-align: left;
-      transform: translateY(-40px); /* Move up to leave room for the footer */
+      transform: translate(0, -60px); /* Move all the way to the top-left corner */
     }
 
     .elastic-carousel-item-wrapper:hover .elastic-carousel-coat-of-arms,
@@ -370,6 +371,10 @@
       transform: translateY(0);
       pointer-events: auto;
     }
+
+    .elastic-carousel-btn {
+      width: 100% !important; /* Full width for easy tap on mobile */
+    }
   }
 </style>
 
@@ -404,14 +409,14 @@
                 <strong>Проект:</strong> {{ item.project.seo_title }}<br>
                 {{ item.project.project_description|striptags|truncatechars:120 }}
               </p>
-              <button class="btn btn-outline-light elastic-carousel-btn w-100" data-bs-toggle="modal" data-bs-target="#laureateModal{{ item.region.id }}">
+              <button class="btn btn-outline-light elastic-carousel-btn" data-bs-toggle="modal" data-bs-target="#laureateModal{{ item.region.id }}">
                 Смотреть проект
               </button>
             {% else %}
               <p class="elastic-carousel-project-desc text-muted">
                 Информация о проекте на данный год отсутствует.
               </p>
-              <button class="btn btn-outline-secondary elastic-carousel-btn w-100" disabled>
+              <button class="btn btn-outline-secondary elastic-carousel-btn" disabled>
                 Проект отсутствует
               </button>
             {% endif %}
