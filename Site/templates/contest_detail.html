@@ -76,7 +76,7 @@
               {% for item in winner_photos %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                   {% if item.photo.image %}
-                    <img src="{{ item.photo.image.url }}" class="d-block w-100" alt="{{ item.photo.title }}">
+                    <img src="{{ item.photo.image.url }}" class="d-block w-100" alt="{{ item.photo.title }}" style="object-fit: cover; max-height: 500px; border-radius: 8px;">
                   {% endif %}
                 </div>
               {% endfor %}
@@ -91,6 +91,10 @@
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Следующий</span>
             </button>
+          </div>
+        {% elif winner_region and winner_region.main_photo %}
+          <div class="text-center">
+            <img src="{{ winner_region.main_photo.url }}" alt="{{ winner_region.title }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 500px; width: 100%; object-fit: cover; border-radius: 8px;">
           </div>
         {% else %}
           <div class="bg-light text-center py-5 text-muted rounded-3 border">
@@ -128,44 +132,8 @@
     </div>
     
     {% if laureates_data %}
-      <div class="col-lg-10 col-12">
-        <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-          {% for item in laureates_data %}
-            <div class="col">
-              <div class="silver-card-wrapper">
-                <div class="laureate-card d-flex flex-column align-items-center justify-content-between h-100">
-                  <div class="text-center w-100">
-                    <h4 class="fw-bold mb-3 text-dark fs-5" style="min-height: 48px; display: flex; align-items: center; justify-content: center;">
-                      {{ item.region.title }}
-                    </h4>
-                    
-                    <div class="my-4 d-flex align-items-center justify-content-center" style="height: 120px;">
-                      {% if item.region.coat_of_arms %}
-                        <img src="{{ item.region.coat_of_arms.url }}" alt="Герб {{ item.region.title }}" class="laureate-coat-of-arms img-fluid">
-                      {% else %}
-                        <div class="d-flex align-items-center justify-content-center text-muted border rounded-circle bg-light" style="width: 80px; height: 80px;">
-                          <i class="bi bi-shield fs-3"></i>
-                        </div>
-                      {% endif %}
-                    </div>
-                  </div>
-                  
-                  <div class="w-100 text-center">
-                    {% if item.project %}
-                      <button class="btn btn-outline-primary laureate-btn px-4 w-100" data-bs-toggle="modal" data-bs-target="#laureateModal{{ item.region.id }}">
-                        Смотреть проект
-                      </button>
-                    {% else %}
-                      <button class="btn btn-outline-secondary laureate-btn px-4 w-100" disabled>
-                        Проект отсутствует
-                      </button>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
+      <div class="col-12">
+        {% include "sliders/carousel-elastic.html" %}
       </div>
     {% else %}
       <div class="col-12 text-center text-muted">

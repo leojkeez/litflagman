@@ -35,6 +35,20 @@ class Region(models.Model):
     )
     is_active = models.BooleanField("Активна", default=True)
     coat_of_arms = models.ImageField("Герб", upload_to='regions/coats_of_arms/', blank=True, null=True)
+    default_slider = models.ForeignKey(
+        'Slider',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Дефолтный слайдер",
+        related_name="default_for_regions"
+    )
+    main_photo = models.ImageField(
+        "Главное фото региона",
+        upload_to='regions/main_photos/',
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = "Регион"

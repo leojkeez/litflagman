@@ -74,6 +74,12 @@
           <div class="region-slider-wrapper js-region-slider" data-year="{{ item.year }}" style="display: {% if item.year == active_year %}block{% else %}none{% endif %};">
             {% if item.project and item.project.slider %}
               {% include "sliders/carousel.html" with slider=item.project.slider ordered_photos=item.project.slider.ordered_photos_list %}
+            {% elif region.default_slider %}
+              {% include "sliders/carousel.html" with slider=region.default_slider ordered_photos=region.default_slider.ordered_photos_list %}
+            {% elif region.main_photo %}
+              <div class="text-center">
+                <img src="{{ region.main_photo.url }}" alt="{{ region.title }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 500px; width: 100%; object-fit: cover; border-radius: 8px;">
+              </div>
             {% else %}
               <!-- Стильная заглушка, если слайдер отсутствует -->
               <div class="text-center py-5 px-4 rounded-3 border border-light-subtle d-flex flex-column align-items-center justify-content-center shadow-sm region-slider-placeholder">

@@ -366,9 +366,18 @@ def multi_upload_photos(request):
 
 
 def region_detail(request, slug):
-    # Пытаемся найти регион по URL из БД
+    # Пытаемся найти регион по URL из БД с предзагрузкой дефолтного слайдера и его фото
     region_url = f"/region/{slug}/"
-    region = get_object_or_404(Region, Q(region_url=region_url) | Q(region_url=f"/region/{slug}") | Q(region_url=slug))
+    region = get_object_or_404(
+        Region.objects.select_related('default_slider').prefetch_related(
+            Prefetch(
+                'default_slider__sliderphoto_set',
+                queryset=SliderPhoto.objects.select_related('photo').order_by('order'),
+                to_attr='ordered_photos_list'
+            )
+        ),
+        Q(region_url=region_url) | Q(region_url=f"/region/{slug}") | Q(region_url=slug)
+    )
     
     # Года от 2015 до 2028 включительно
     start_year = 2015
@@ -470,8 +479,13 @@ def contest_detail(request, year=None):
         winner_project = Project.objects.filter(region=winner_region, year=year, is_active=True).first()
         if winner_project:
             winner_slider = Slider.objects.filter(project=winner_project, is_active=True).first()
-            if winner_slider:
-                winner_photos = SliderPhoto.objects.filter(slider=winner_slider).select_related('photo').order_by('order')
+        
+        # Если слайдер для проекта текущего года отсутствует, пробуем использовать дефолтный слайдер региона
+        if not winner_slider and winner_region.default_slider and winner_region.default_slider.is_active:
+            winner_slider = winner_region.default_slider
+
+        if winner_slider:
+            winner_photos = SliderPhoto.objects.filter(slider=winner_slider).select_related('photo').order_by('order')
 
     # Лауреаты конкурса - это contest.top
     laureates = contest.top.filter(is_active=True)
