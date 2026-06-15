@@ -103,12 +103,24 @@
       const index = e.to;
       const parentEl = carouselEl.parentElement;
       if (parentEl) {
+        const thumbnailsContainer = parentEl.querySelector('.carousel-thumbnails');
         const thumbnails = parentEl.querySelectorAll('.thumbnail-item');
+        
         thumbnails.forEach((thumb, i) => {
           if (i === index) {
             thumb.classList.add('active');
-            // Плавно центрируем активную превьюшку в ленте
-            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            
+            // Скроллим только контейнер превью, не затрагивая страницу
+            if (thumbnailsContainer) {
+              const containerWidth = thumbnailsContainer.offsetWidth;
+              const thumbOffset = thumb.offsetLeft;
+              const thumbWidth = thumb.offsetWidth;
+              
+              thumbnailsContainer.scrollTo({
+                left: thumbOffset - (containerWidth / 2) + (thumbWidth / 2),
+                behavior: 'smooth'
+              });
+            }
           } else {
             thumb.classList.remove('active');
           }
@@ -147,6 +159,7 @@
 
   /* Превью под слайдером */
   .carousel-thumbnails {
+    position: relative;
     max-width: 100%;
     scrollbar-width: none; /* Скрываем стандартный скроллбар в Firefox */
     padding-top: 8px; /* Отступ сверху, чтобы превью не обрезались при увеличении и подъеме вверх */
