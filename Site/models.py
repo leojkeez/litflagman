@@ -327,7 +327,7 @@ class News(models.Model):
     image_1x1 = models.ImageField("Картинка 1:1", upload_to='news/1x1/%Y/%m/%d/', blank=True, null=True)
     documents = models.ManyToManyField(File, verbose_name="Документы", blank=True)
     is_active = models.BooleanField("Активна", default=True)
-    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
+    created_at = models.DateTimeField("Дата создания", default=timezone.now)
     updated_at = models.DateTimeField("Дата обновления", auto_now=True)
 
     def __str__(self):
