@@ -178,3 +178,55 @@
 .x-small {
   font-size: 0.7rem !important;
 }
+
+  .region-nav-link {
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+  }
+  .gradient-text-animate {
+    color: #212529;
+    transition: all 0.3s ease;
+    font-weight: 800;
+    font-family: 'Alumni Sans', sans-serif;
+    font-size: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+  .region-nav-link:hover .gradient-text-animate {
+    background: var(--main-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradient-flow 3s linear infinite;
+    transform: scale(1.02);
+  }
+  @keyframes gradient-flow {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+  .region-nav-label {
+    font-size: 0.8rem;
+    color: #adb5bd;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 2px;
+    font-weight: 600;
+  }
+  .nav-icon {
+    -webkit-text-fill-color: initial;
+    color: var(--color-purple);
+    font-size: 1.4rem;
+    transition: transform 0.3s ease;
+  }
+  .region-nav-link:hover .bi-chevron-left {
+    transform: translateX(-5px);
+  }
+  .region-nav-link:hover .bi-chevron-right {
+    transform: translateX(5px);
+  }
