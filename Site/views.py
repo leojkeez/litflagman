@@ -466,8 +466,18 @@ def region_detail(request, slug):
         if r.pk == region.pk:
             if i > 0:
                 prev_region = all_regions[i - 1]
+                # Формируем корректный URL для навигации (абсолютный путь)
+                p_url = (prev_region.region_url or "").strip('/')
+                if p_url.startswith('region/'):
+                    p_url = p_url[7:].strip('/')
+                prev_region.nav_url = f"/region/{p_url}/"
             if i < len(all_regions) - 1:
                 next_region = all_regions[i + 1]
+                # Формируем корректный URL для навигации (абсолютный путь)
+                n_url = (next_region.region_url or "").strip('/')
+                if n_url.startswith('region/'):
+                    n_url = n_url[7:].strip('/')
+                next_region.nav_url = f"/region/{n_url}/"
             break
 
     return render(request, "region_detail.html", {
