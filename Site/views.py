@@ -448,10 +448,34 @@ def region_detail(request, slug):
             'has_project': project is not None
         })
         
+    # Логика навигации (предыдущий/следующий регион по алфавиту)
+    all_regions = list(Region.objects.filter(is_active=True).only('id', 'title', 'region_url'))
+
+    def get_sort_name(name):
+        if not name: return ""
+        if name.startswith("Республика "):
+            return name[len("Республика "):]
+        return name
+
+    all_regions.sort(key=lambda x: get_sort_name(x.title))
+
+    prev_region = None
+    next_region = None
+
+    for i, r in enumerate(all_regions):
+        if r.pk == region.pk:
+            if i > 0:
+                prev_region = all_regions[i - 1]
+            if i < len(all_regions) - 1:
+                next_region = all_regions[i + 1]
+            break
+
     return render(request, "region_detail.html", {
         'region': region,
         'years_data': years_data,
         'active_year': active_year,
+        'prev_region': prev_region,
+        'next_region': next_region,
     })
 
 

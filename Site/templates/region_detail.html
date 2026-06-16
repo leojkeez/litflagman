@@ -160,6 +160,25 @@
     </div>
   </div>
 
+  <!-- Навигация по регионам -->
+  <div class="row mb-5 justify-content-center">
+    <div class="col-12 col-lg-10 d-flex justify-content-end">
+      <div class="d-flex align-items-center gap-3">
+        {% if prev_region %}
+          <a href="{{ prev_region.region_url }}" class="news-nav-link d-flex align-items-center justify-content-center p-2 rounded-circle border" title="Предыдущий: {{ prev_region.title }}" style="width: 45px; height: 45px; transition: all 0.3s ease; border-color: #dee2e6 !important;">
+            <img src="{% static 'arrow-left.png' %}" alt="Предыдущий регион" style="width: 20px; height: auto;">
+          </a>
+        {% endif %}
+
+        {% if next_region %}
+          <a href="{{ next_region.region_url }}" class="news-nav-link d-flex align-items-center justify-content-center p-2 rounded-circle border" title="Следующий: {{ next_region.title }}" style="width: 45px; height: 45px; transition: all 0.3s ease; border-color: #dee2e6 !important;">
+            <img src="{% static 'arrow-right.png' %}" alt="Следующий регион" style="width: 20px; height: auto;">
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- Скрипт для интерактивного переключения лет и бегающего ползунка -->
