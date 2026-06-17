@@ -95,59 +95,32 @@ class Project(models.Model):
         verbose_name_plural = "Проекты"
 
 class BookTerritory(models.Model):
-    main_project = models.TextField("Главный проект")
-    regions = models.ManyToManyField(Region, verbose_name="Регион", through='RegionBookTerritoryMembership')
-    contest_description = RichTextField("Описание конкурса")
-    seo_title = models.CharField("Тайтл СЕО", max_length=255)
-    seo_descriptor = models.TextField("Дескриптор СЕО")
+    regions = models.ManyToManyField(Region, verbose_name="Регионы", blank=True)
+    text = RichTextField("Текстовое поле", blank=True, default="")
+    seo_title = models.CharField("Тайтл СЕО", max_length=255, blank=True, default="")
+    seo_description = models.TextField("Дескриптор СЕО", blank=True, default="")
     is_active = models.BooleanField("Активна", default=True)
 
     def __str__(self):
-        return self.seo_title
+        return self.seo_title or "Территория книги и чтения"
 
     class Meta:
-        verbose_name = "Территория книги"
-        verbose_name_plural = "Территория книги"
+        verbose_name = "Территория книги и чтения"
+        verbose_name_plural = "Территория книги и чтения"
 
 class Club(models.Model):
-    main_project = models.TextField("Главный проект")
-    regions = models.ManyToManyField(Region, verbose_name="Регион", through='RegionClubMembership')
-    contest_description = RichTextField("Описание конкурса")
-    seo_title = models.CharField("Тайтл СЕО", max_length=255)
-    seo_descriptor = models.TextField("Дескриптор СЕО")
+    regions = models.ManyToManyField(Region, verbose_name="Регионы", blank=True)
+    text = RichTextField("Текстовое поле", blank=True, default="")
+    seo_title = models.CharField("Тайтл СЕО", max_length=255, blank=True, default="")
+    seo_description = models.TextField("Дескриптор СЕО", blank=True, default="")
     is_active = models.BooleanField("Активна", default=True)
 
     def __str__(self):
-        return self.seo_title
+        return self.seo_title or "Клуб первых"
 
     class Meta:
         verbose_name = "Клуб первых"
         verbose_name_plural = "Клубы первых"
-
-class RegionClubMembership(models.Model):
-    region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    club = models.ForeignKey("Club", on_delete=models.CASCADE)
-    year = models.IntegerField("Год", default=datetime.datetime.now().year)
-    is_active = models.BooleanField("Активна", default=True)
-
-    class Meta:
-        unique_together = (
-            'region',
-            'club',
-            'year',
-        )
-        verbose_name = "Членство в клубе первых"
-        verbose_name_plural = "Членства в клубах первых"
-
-class RegionBookTerritoryMembership(models.Model):
-    region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    book_territory = models.ForeignKey("BookTerritory", on_delete=models.CASCADE)
-    year = models.IntegerField("Год", default=datetime.datetime.now().year)
-    is_active = models.BooleanField("Активна", default=True)
-
-    class Meta:
-        verbose_name = "Членство в территории книги"
-        verbose_name_plural = "Членство в территориях книги"
 
 class Photo(models.Model):
     image = models.ImageField("Изображение", upload_to='photos/%Y/%m/%d/')

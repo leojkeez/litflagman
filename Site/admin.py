@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from . import views
 from django.urls import path
-from .models import Region, Project, BookTerritory, Club, RegionClubMembership, RegionBookTerritoryMembership, Photo, Slider, HtmlSnippet, SliderPhoto, News, StaticPage, Contest, File
+from .models import Region, Project, BookTerritory, Club, Photo, Slider, HtmlSnippet, SliderPhoto, News, StaticPage, Contest, File
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -109,10 +109,35 @@ class RegionAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ("region", "year", "is_active")
     search_fields = ("region__title", "year",)
-admin.site.register(BookTerritory)
-admin.site.register(Club)
-admin.site.register(RegionClubMembership)
-admin.site.register(RegionBookTerritoryMembership)
+
+@admin.register(BookTerritory)
+class BookTerritoryAdmin(admin.ModelAdmin):
+    filter_horizontal = ('regions',)
+    list_display = ('seo_title', 'is_active')
+    fieldsets = (
+        (None, {
+            'fields': ('regions', 'text', 'is_active')
+        }),
+        ('SEO', {
+            'classes': ('collapse',),
+            'fields': ('seo_title', 'seo_description'),
+        }),
+    )
+
+@admin.register(Club)
+class ClubAdmin(admin.ModelAdmin):
+    filter_horizontal = ('regions',)
+    list_display = ('seo_title', 'is_active')
+    fieldsets = (
+        (None, {
+            'fields': ('regions', 'text', 'is_active')
+        }),
+        ('SEO', {
+            'classes': ('collapse',),
+            'fields': ('seo_title', 'seo_description'),
+        }),
+    )
+
 @admin.register(Contest)
 class ContestAdmin(admin.ModelAdmin):
     filter_horizontal = ('top', 'short_list')

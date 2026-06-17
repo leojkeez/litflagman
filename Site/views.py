@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q, Prefetch
 import datetime
-from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto, HtmlSnippet
+from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto, HtmlSnippet, Club
 
 def festival(request):
     snippets = HtmlSnippet.objects.filter(category='festival', is_active=True)[:3]
@@ -594,3 +594,10 @@ def news_list(request):
 def news_detail(request, slug):
     news_item = get_object_or_404(News, slug=slug, is_active=True)
     return render(request, "news_detail.html", {"news": news_item})
+
+
+def club(request):
+    club_instance = Club.objects.filter(is_active=True).prefetch_related(
+        Prefetch('regions', queryset=Region.objects.filter(is_active=True).prefetch_related('contest_main_project'))
+    ).first()
+    return render(request, "club.html", {"club": club_instance})

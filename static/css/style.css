@@ -1116,3 +1116,200 @@ hr.hr-gradient {
   transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(153, 50, 204, 0.15);
 }
+
+/* Region Card Styles */
+@keyframes gold-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes sheen {
+  0% {
+    left: -150%;
+  }
+  50%, 100% {
+    left: 150%;
+  }
+}
+
+.region-card {
+  position: relative;
+  overflow: visible; /* Разрешаем тени выходить за пределы карточки */
+  z-index: 1; /* Создаем новый контекст наложения для корректной работы z-index: -1 у тени */
+  height: 320px;
+  background-image: url("../gold.webp");
+  background-size: 200% 200%; /* Увеличиваем масштаб для плавной анимации */
+  animation: gold-shimmer 30s ease infinite; /* Постоянный перелив в обычном состоянии */
+  animation-delay: calc(var(--card-index, 0) * -1.5s); /* Десинхронизируем перелив рамок разных карточек */
+  border-radius: 16px;
+  padding: 3px 3px 25px 3px; /* Внутренний отступ снизу у карточки уменьшен до 25 */
+  display: flex;
+  flex-direction: column;
+  text-decoration: none !important;
+  color: #212529;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.region-card__inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  z-index: 5;
+  pointer-events: none;
+  animation: sheen 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: calc(var(--card-index, 0) * 1.5s); /* Последовательный запуск блика */
+}
+
+.region-card:hover {
+  transform: translateY(-5px);
+  box-shadow: none; /* Убираем стандартную серую тень, чтобы она не перекрывала пульсирующий градиент */
+}
+
+.region-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 13px; /* Полное закругление тела карточки внутри рамки */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+/* Фоновое изображение при наведении */
+.region-card__hover-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0;
+  transform: scale(1); /* Начинаем со стандартного размера */
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.region-card:hover .region-card__hover-img {
+  opacity: 1;
+  transform: scale(1.1); /* Плавно приближаем (зуммируем) при наведении */
+}
+
+/* Затемняющий оверлей при наведении для читаемости текста */
+.region-card__inner::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8) 100%);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.region-card:hover .region-card__inner::after {
+  opacity: 1;
+}
+
+/* Дефолтный блок медиа */
+.region-card__default-media {
+  height: 200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent; /* Убран фон у герба */
+  overflow: hidden;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.region-card:hover .region-card__default-media {
+  opacity: 0;
+}
+
+.region-card__static-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.region-card__coat-img {
+  max-height: 100px; /* Герб сделан меньше */
+  max-width: 80%;
+  object-fit: contain;
+}
+
+.region-card__no-media {
+  color: #6c757d;
+}
+
+/* Панель заголовка */
+.region-card__body {
+  padding: 15px;
+  text-align: center;
+  z-index: 3;
+  transition: color 0.3s ease;
+  border-radius: 0 0 13px 13px; /* Скругление нижних углов у region-card__body */
+}
+
+.region-card__title {
+  font-family: 'Alumni Sans', sans-serif; /* Шрифт Alumni sans */
+  font-size: 1.6rem; /* Увеличен размер, так как Alumni Sans узкий */
+  font-weight: 700;
+  margin: 0;
+  transition: color 0.4s ease, text-shadow 0.4s ease;
+}
+
+.region-card:hover .region-card__title {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Текст "Подробнее ›" на золотой рамке снизу */
+.region-card__more {
+  position: absolute;
+  bottom: 0px;
+  left: 20px; /* Кнопка убрана в левый край */
+  height: 25px; /* Высота подстроена под размер нижней рамки (25px) */
+  display: flex;
+  align-items: center;
+  font-family: 'Alumni Sans', sans-serif; /* Шрифт Alumni sans */
+  font-size: 14px;
+  font-weight: 700;
+  color: #3d2b00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.region-card__arrow {
+  display: inline-block;
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.region-card:hover .region-card__arrow {
+  transform: translateX(5px); /* Стрелка отъезжает на 5 пикселей вправо */
+}

@@ -1,0 +1,32 @@
+{% load static %}
+
+{% with winner_contest=region.contest_main_project.all|dictsortreversed:"year"|first %}
+<a href="{% if winner_contest %}{% url 'contest_detail' year=winner_contest.year %}{% else %}{{ region.region_url|default:'#' }}{% endif %}" class="region-card news-item h-100" style="--card-index: {{ index|default:0 }};">
+  <!-- Кнопка "Подробнее" на золотой рамке -->
+  <div class="region-card__more">подробнее <span class="region-card__arrow">&rsaquo;</span></div>
+  
+  <!-- Тело карточки (то, что внутри рамки) -->
+  <div class="region-card__inner">
+    <!-- Фоновое изображение при наведении (анимация появления) -->
+    {% if region.main_photo %}
+      <img src="{{ region.main_photo.url }}" class="region-card__hover-img" alt="{{ region.title }}">
+    {% endif %}
+
+    <!-- Контент по умолчанию (скрывается при наведении) -->
+    <div class="region-card__default-media">
+      {% if region.coat_of_arms %}
+        <img src="{{ region.coat_of_arms.url }}" class="region-card__coat-img" alt="{{ region.title }}">
+      {% else %}
+        <div class="region-card__no-media">
+          <i class="bi bi-geo-alt fs-1"></i>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Текст с названием региона -->
+    <div class="region-card__body">
+      <h5 class="region-card__title">{{ region.title }}</h5>
+    </div>
+  </div>
+</a>
+{% endwith %}

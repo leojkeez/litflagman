@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  {% if club.seo_title %}{{ club.seo_title }}{% else %}Клуб первых{% endif %} — Литфлагман
+{% endblock %}
+
+{% block meta_description %}
+  {% if club.seo_description %}{{ club.seo_description }}{% else %}Клуб первых — Всероссийский конкурс «Самый читающий регион»{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Строка 1: Иконка static/1st.svg и заголовок "Клуб первых" -->
+  <div class="row mb-4 text-center">
+    <div class="col-12">
+      <img src="{% static '1st.svg' %}" alt="Клуб первых" class="img-fluid club-icon mb-2" style="max-height: 120px;">
+      <h1 class="fw-bold my-4">Клуб первых</h1>
+    </div>
+  </div>
+
+  <!-- Строка 2: Текстовое описание (col-lg-7) -->
+  <div class="row mb-5 justify-content-center">
+    <div class="col-12 col-lg-7 text-center text-lg-start">
+      <div class="club-description-text txt-wide fs-5 my-4 leading-relaxed">
+        {% if club.text %}
+          {{ club.text|safe }}
+        {% else %}
+          <p class="text-muted">Описание клуба первых еще не заполнено.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Строка 3: Интерактивная карта (includes/map.html) -->
+  <div class="row mb-5 justify-content-center">
+    <div class="col-12 text-center">
+      <h3 class="fw-bold mb-4">Интерактивная карта Клуба первых</h3>
+      <div class="map-container-wrapper inline-block" style="overflow-x: auto; max-width: 100%;">
+        {% include 'includes/map.html' %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Строка 4: Карточки регионов (4 вертикальных карточки в ряд, включаемый шаблон) -->
+  <div class="row mb-4">
+    <div class="col-12 text-center mb-4">
+      <h3 class="fw-bold">Регионы-участники Клуба первых</h3>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+    {% for region in club.regions.all %}
+      <div class="col">
+        {% include 'includes/region_card.html' with region=region index=forloop.counter0 %}
+      </div>
+    {% empty %}
+      <div class="col-12 text-center text-muted py-4">
+        <p class="fs-5">Регионы пока не добавлены.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
