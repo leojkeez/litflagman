@@ -118,8 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (mapElement && mapTooltip) {
     const regions = mapElement.querySelectorAll('.js-history-competition-region');
-    const container = mapElement.closest('.map-card-wrapper') || mapElement.closest('.position-relative') || mapElement.closest('.col-lg-6');
+    const container = mapElement.closest('.map-container-wrapper') || mapElement.closest('.map-card-wrapper') || mapElement.closest('.position-relative') || mapElement.closest('.col-lg-6');
     const winnerCard = document.querySelector('.js-winner-card');
+
+    // Убеждаемся, что контейнер имеет относительное позиционирование для тултипа
+    if (container) {
+      container.style.position = 'relative';
+    }
 
     regions.forEach(region => {
       region.addEventListener('mouseenter', () => {
@@ -132,9 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
         const containerRect = container.getBoundingClientRect();
         
-        // Position tooltip relative to map card container
-        const x = e.clientX - containerRect.left + 15;
-        const y = e.clientY - containerRect.top + 15;
+        // Позиционируем тултип относительно контейнера с учетом прокрутки
+        const x = e.clientX - containerRect.left + container.scrollLeft + 15;
+        const y = e.clientY - containerRect.top + container.scrollTop + 15;
         
         mapTooltip.style.left = `${x}px`;
         mapTooltip.style.top = `${y}px`;
