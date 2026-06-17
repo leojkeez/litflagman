@@ -206,6 +206,7 @@
 </div>
 
 <!-- Карточка региона, которая появляется при клике -->
+{% if not hide_winner_card %}
 <div class="winner-card mt-3 p-3 d-none js-winner-card transition-all" style="background-color: #ffffff; border-color: #e2e8f0; border-radius: 0.75rem; opacity: 0; transform: translateY(10px);">
   <div class="row align-items-center g-2">
     <div class="col-sm-2 col-3 text-center js-winner-coat-container">
@@ -225,3 +226,4 @@
     </div>
   </div>
 </div>
+{% endif %}

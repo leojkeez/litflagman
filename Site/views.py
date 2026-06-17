@@ -600,4 +600,11 @@ def club(request):
     club_instance = Club.objects.filter(is_active=True).prefetch_related(
         Prefetch('regions', queryset=Region.objects.filter(is_active=True).prefetch_related('contest_main_project'))
     ).first()
-    return render(request, "club.html", {"club": club_instance})
+    
+    # Получаем регионы для интерактивной карты (те, у которых заполнен svg_id)
+    map_regions = Region.objects.filter(is_active=True, svg_id__isnull=False).exclude(svg_id="").prefetch_related('contest_main_project')
+    
+    return render(request, "club.html", {
+        "club": club_instance,
+        "map_regions": map_regions
+    })

@@ -1313,3 +1313,44 @@ hr.hr-gradient {
 .region-card:hover .region-card__arrow {
   transform: translateX(5px); /* Стрелка отъезжает на 5 пикселей вправо */
 }
+
+/* Эффект подсветки при клике на карту */
+.region-card.is-highlighted {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 0 30px rgba(153, 50, 204, 0.6) !important;
+  z-index: 100;
+}
+
+.region-card.is-highlighted .region-card__hover-img {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.region-card.is-highlighted .region-card__title {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.region-card.is-highlighted .region-card__default-media {
+  opacity: 0;
+}
+
+.region-card.is-highlighted::after {
+  opacity: 1;
+}
+
+/* Год победы в правом углу на золотой рамке */
+.region-card__year {
+  position: absolute;
+  bottom: 0px;
+  right: 20px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  font-family: 'Alumni Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #3d2b00;
+  z-index: 10;
+  pointer-events: none;
+}

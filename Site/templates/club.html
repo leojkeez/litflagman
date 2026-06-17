@@ -35,9 +35,8 @@
   <!-- Строка 3: Интерактивная карта (includes/map.html) -->
   <div class="row mb-5 justify-content-center">
     <div class="col-12 text-center">
-      <h3 class="fw-bold mb-4">Интерактивная карта Клуба первых</h3>
       <div class="map-container-wrapper inline-block" style="overflow-x: auto; max-width: 100%;">
-        {% include 'includes/map.html' %}
+        {% include 'includes/map.html' with hide_winner_card=True %}
       </div>
     </div>
   </div>
@@ -49,7 +48,7 @@
     </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-5">
     {% for region in club.regions.all %}
       <div class="col">
         {% include 'includes/region_card.html' with region=region index=forloop.counter0 %}
@@ -61,4 +60,39 @@
     {% endfor %}
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const mapElement = document.querySelector('.js-history-competition-map');
+  if (!mapElement) return;
+
+  const regions = mapElement.querySelectorAll('.js-history-competition-region');
+  
+  regions.forEach(regionPath => {
+    regionPath.addEventListener('click', (e) => {
+      const regionId = regionPath.getAttribute('id');
+      if (!regionId) return;
+
+      // Ищем карточку с таким же svg_id
+      const targetCard = document.querySelector(`.js-region-card[data-svg-id="${regionId}"]`);
+      
+      if (targetCard) {
+        // Убираем подсветку с других карточек
+        document.querySelectorAll('.js-region-card.is-highlighted').forEach(c => c.classList.remove('is-highlighted'));
+        
+        // Подсвечиваем целевую карточку
+        targetCard.classList.add('is-highlighted');
+        
+        // Плавно скроллим к ней
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Через 3 секунды убираем подсветку
+        setTimeout(() => {
+          targetCard.classList.remove('is-highlighted');
+        }, 3000);
+      }
+    });
+  });
+});
+</script>
 {% endblock %}
