@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q, Prefetch
 import datetime
-from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto, HtmlSnippet, Club
+from .models import Photo, News, Region, Project, Contest, Slider, SliderPhoto, HtmlSnippet, Club, BookTerritory
 
 def festival(request):
     snippets = HtmlSnippet.objects.filter(category='festival', is_active=True)[:3]
@@ -607,4 +607,14 @@ def club(request):
     return render(request, "club.html", {
         "club": club_instance,
         "map_regions": map_regions
+    })
+
+
+def book_territory(request):
+    book_territory_instance = BookTerritory.objects.filter(is_active=True).prefetch_related(
+        Prefetch('regions', queryset=Region.objects.filter(is_active=True).prefetch_related('contest_main_project'))
+    ).first()
+    
+    return render(request, "book-territory.html", {
+        "book_territory": book_territory_instance
     })

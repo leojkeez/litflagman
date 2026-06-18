@@ -12,4 +12,5 @@ urlpatterns = [
     path("festival/", views.festival, name="festival"),
     path("festival/media/", views.fest_media, name="fest_media"),
     path("club/", views.club, name="club"),
+    path("book-territory/", views.book_territory, name="book_territory"),
 ]

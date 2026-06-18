@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  {% if book_territory.seo_title %}{{ book_territory.seo_title }}{% else %}Территория книги и чтения{% endif %} — Литфлагман
+{% endblock %}
+
+{% block meta_description %}
+  {% if book_territory.seo_description %}{{ book_territory.seo_description }}{% else %}Территория книги и чтения — Всероссийский конкурс «Самый читающий регион»{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- 1 строка - лого (static\boat.svg) -->
+  <section class="logo-section mb-4 text-center">
+    <div class="row">
+      <div class="col-12">
+        <img src="{% static 'boat.svg' %}" alt="Территория книги и чтения" class="img-fluid club-icon mb-2" style="max-height: 120px;">
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 строка - Тайтл (Территория книги и чтения) -->
+  <section class="title-section mb-4 text-center">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="fw-bold my-3">Территория книги и чтения</h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 строка описание (col-7) + добавь класс txt-wide -->
+  <section class="description-section mb-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-7 text-center text-lg-start">
+        <div class="club-description-text txt-wide fs-5 my-4 leading-relaxed">
+          {% if book_territory.text %}
+            {{ book_territory.text|safe }}
+          {% else %}
+            <p class="text-muted">Описание территории книги и чтения еще не заполнено.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 строка - Регионы-участники (тут будут карточки по 4 в ряд) - сами карточки сделай включаемым шаблоном region_bt_card.html -->
+  <section class="regions-section mb-5">
+    <div class="row mb-4">
+      <div class="col-12 text-center mb-4">
+        <h3 class="fw-bold">Регионы-участники</h3>
+      </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+      {% for region in book_territory.regions.all %}
+        <div class="col">
+          {% include 'includes/region_bt_card.html' with region=region index=forloop.counter0 %}
+        </div>
+      {% empty %}
+        <div class="col-12 text-center text-muted py-4">
+          <p class="fs-5">Регионы пока не добавлены.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -400,3 +400,51 @@ document.addEventListener('DOMContentLoaded', () => {
     animateFollower();
   }
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const container = document.querySelector(".elastic-carousel-container");
+    if (!container) return;
+    const wrappers = container.querySelectorAll(".elastic-carousel-item-wrapper");
+    
+    // Set first item active on mobile initially
+    const setInitialActive = () => {
+      if (window.innerWidth < 992 && wrappers.length > 0) {
+        // Find if any is active, otherwise set first
+        const hasActive = Array.from(wrappers).some(w => w.classList.contains("active"));
+        if (!hasActive) {
+          wrappers[0].classList.add("active");
+          container.classList.add("has-active");
+        }
+      }
+    };
+    
+    setInitialActive();
+    window.addEventListener("resize", setInitialActive);
+
+    wrappers.forEach(wrapper => {
+      wrapper.addEventListener("click", function(e) {
+        // If clicked on a button or link, don't interfere
+        if (e.target.closest("button") || e.target.closest("a")) {
+          return;
+        }
+        
+        const isMobile = window.innerWidth < 992;
+        if (isMobile) {
+          if (!this.classList.contains("active")) {
+            e.preventDefault();
+            wrappers.forEach(w => w.classList.remove("active"));
+            this.classList.add("active");
+            container.classList.add("has-active");
+          }
+        }
+      });
+    });
+
+    // Clear active states on desktop to avoid weird hover artifacts
+    container.addEventListener("mouseenter", function() {
+      if (window.innerWidth >= 992) {
+        wrappers.forEach(w => w.classList.remove("active"));
+        container.classList.remove("has-active");
+      }
+    });
+  });
