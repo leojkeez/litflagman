@@ -83,13 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Подсвечиваем целевую карточку
         targetCard.classList.add('is-highlighted');
         
-        // Плавно скроллим к ней
-        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Через 3 секунды убираем подсветку
-        setTimeout(() => {
-          targetCard.classList.remove('is-highlighted');
-        }, 3000);
+        // Плавно скроллим к ней только при пользовательском взаимодействии
+        if (e.isTrusted) {
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          
+          // Через 3 секунды убираем подсветку
+          setTimeout(() => {
+            targetCard.classList.remove('is-highlighted');
+          }, 3000);
+        }
       }
     });
   });
