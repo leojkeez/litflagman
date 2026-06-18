@@ -262,7 +262,7 @@ class NewsAdmin(admin.ModelAdmin):
     list_filter = ('category', 'is_active', 'created_at')
     list_editable = ('is_active',)
     search_fields = ('title', 'short_description', 'full_text')
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('updated_at',)
     filter_horizontal = ('documents',)
     fieldsets = (
         (None, {
