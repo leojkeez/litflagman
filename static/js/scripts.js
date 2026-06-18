@@ -247,29 +247,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Автоматически выбираем регион текущего года по умолчанию ---
-    const currentYear = new Date().getFullYear(); // 2026
-    let defaultRegionData = Array.from(document.querySelectorAll('.js-map-region-item')).find(el => {
-      const years = el.getAttribute('data-years') || '';
-      return years.split(', ').map(y => y.trim()).includes(String(currentYear));
-    });
+    if (winnerCard) {
+      const currentYear = new Date().getFullYear(); // 2026
+      let defaultRegionData = Array.from(document.querySelectorAll('.js-map-region-item')).find(el => {
+        const years = el.getAttribute('data-years') || '';
+        return years.split(', ').map(y => y.trim()).includes(String(currentYear));
+      });
 
-    // Если победителя за текущий год в базе нет, берем регион с самым последним годом победы
-    if (!defaultRegionData) {
-      defaultRegionData = Array.from(document.querySelectorAll('.js-map-region-item')).sort((a, b) => {
-        const yearsA = (a.getAttribute('data-years') || '').split(', ').map(Number);
-        const yearsB = (b.getAttribute('data-years') || '').split(', ').map(Number);
-        const maxA = yearsA.length ? Math.max(...yearsA) : 0;
-        const maxB = yearsB.length ? Math.max(...yearsB) : 0;
-        return maxB - maxA;
-      })[0];
-    }
+      // Если победителя за текущий год в базе нет, берем регион с самым последним годом победы
+      if (!defaultRegionData) {
+        defaultRegionData = Array.from(document.querySelectorAll('.js-map-region-item')).sort((a, b) => {
+          const yearsA = (a.getAttribute('data-years') || '').split(', ').map(Number);
+          const yearsB = (b.getAttribute('data-years') || '').split(', ').map(Number);
+          const maxA = yearsA.length ? Math.max(...yearsA) : 0;
+          const maxB = yearsB.length ? Math.max(...yearsB) : 0;
+          return maxB - maxA;
+        })[0];
+      }
 
-    if (defaultRegionData) {
-      const svgId = defaultRegionData.getAttribute('data-svg-id');
-      const regionEl = mapElement.querySelector(`#${svgId}`);
-      if (regionEl) {
-        // Триггерим клик, чтобы карточка отобразилась по умолчанию
-        regionEl.dispatchEvent(new Event('click'));
+      if (defaultRegionData) {
+        const svgId = defaultRegionData.getAttribute('data-svg-id');
+        const regionEl = mapElement.querySelector(`#${svgId}`);
+        if (regionEl) {
+          // Триггерим клик, чтобы карточка отобразилась по умолчанию
+          regionEl.dispatchEvent(new Event('click'));
+        }
       }
     }
   }
