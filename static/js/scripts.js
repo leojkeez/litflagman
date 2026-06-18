@@ -138,8 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const containerRect = container.getBoundingClientRect();
         
         // Позиционируем тултип относительно контейнера с учетом прокрутки
-        const x = e.clientX - containerRect.left + container.scrollLeft + 15;
-        const y = e.clientY - containerRect.top + container.scrollTop + 15;
+        // x: +15px вправо от курсора
+        // y: -45px вверх от курсора (чтобы он был НАД курсором и не вызывал скролл)
+        const x = e.clientX - containerRect.left + container.scrollLeft + 20;
+        const y = e.clientY - containerRect.top + container.scrollTop - 20;
         
         mapTooltip.style.left = `${x}px`;
         mapTooltip.style.top = `${y}px`;
