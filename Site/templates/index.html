@@ -5,6 +5,10 @@
 
 {% block meta_description %}Присоединяйтесь к Всероссийскому конкурсу «Самый читающий регион». Здесь вы найдете информацию о литературных инициативах всех 89 регионов России, новости книжной отрасли и итоги конкурса.{% endblock %}
 
+{% block og_title %}Литфлагман — Всероссийский конкурс «Самый читающий регион»{% endblock %}
+{% block og_description %}Официальный сайт конкурса «Самый читающий регион». Информация о литературных проектах 89 регионов России, новости и итоги конкурса.{% endblock %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'ban-ok.webp' %}{% endblock %}
+
 {% block structured_data %}
 {{ block.super }}
 <script type="application/ld+json">
@@ -12,9 +16,68 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Литфлагман",
-  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}/",
   "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'logo.png' %}",
-  "description": "Всероссийский конкурс книжных проектов и инициатив «Самый читающий регион»."
+  "description": "Всероссийский конкурс книжных проектов и инициатив «Самый читающий регион».",
+  "sameAs": [
+    "https://vk.com/litflagman",
+    "https://t.me/litflagman"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ул. Новорязанская, д. 8 «А», корп. 3",
+    "addressLocality": "Москва",
+    "postalCode": "107078",
+    "addressCountry": "RU"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+7-495-775-44-31",
+    "contactType": "customer service",
+    "email": "litflagman@yandex.ru"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "Всероссийский конкурс «Самый читающий регион» 2026",
+  "description": "Масштабный конкурс книжных проектов и инициатив, объединяющий всю страну в стремлении развивать культуру чтения.",
+  "startDate": "2026-04-12",
+  "endDate": "2026-10-31",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "Российская Федерация",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "RU"
+    }
+  },
+  "image": [
+    "{{ request.scheme }}://{{ request.get_host }}{% static 'ban-ok.webp' %}"
+  ],
+  "organizer": {
+    "@type": "Organization",
+    "name": "Российский книжный союз",
+    "url": "https://bookunion.ru"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Главная",
+    "item": "{{ request.scheme }}://{{ request.get_host }}/"
+  }]
 }
 </script>
 {% endblock %}
@@ -81,7 +144,9 @@
     <!-- Два маленьких баннера -->
     <div class="row g-3 mb-4">
       <div class="col-6">
-        <img src="{% static 'ban-kp.webp' %}" alt="Клуб первых" class="img-fluid rounded-3 shadow-sm">
+        <a href="/club/" target="_blank" class="d-block">
+          <img src="{% static 'ban-kp.webp' %}" alt="Клуб первых" class="img-fluid rounded-3 shadow-sm">
+        </a>
       </div>
       <div class="col-6">
         <img src="{% static 'ban-tkc.webp' %}" alt="Территория книги и чтения" class="img-fluid rounded-3 shadow-sm">

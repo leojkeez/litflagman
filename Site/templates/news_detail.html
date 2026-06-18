@@ -12,6 +12,7 @@
 {% block og_image %}{% if news.image_16x10 %}{{ request.scheme }}://{{ request.get_host }}{{ news.image_16x10.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'logo.png' %}{% endif %}{% endblock %}
 
 {% block structured_data %}
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
@@ -38,6 +39,7 @@
     }
   }
 }
+</script>
 {% endblock %}
 
 {% block content %}
