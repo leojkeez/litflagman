@@ -1305,7 +1305,7 @@ hr.hr-gradient {
   font-family: 'Alumni Sans', sans-serif; /* Шрифт Alumni sans */
   font-size: 14px;
   font-weight: 700;
-  color: #3d2b00;
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 1px;
   z-index: 10;
@@ -1358,7 +1358,7 @@ hr.hr-gradient {
   font-family: 'Alumni Sans', sans-serif;
   font-size: 18px;
   font-weight: 800;
-  color: #3d2b00;
+  color: #ffffff;
   z-index: 10;
   pointer-events: none;
 }
@@ -1368,6 +1368,8 @@ hr.hr-gradient {
   bottom: 0px;
   right: 15px;
   font-weight: 600;
+  font-family: 'Alumni Sans', sans-serif;
+  color: #ffffff;
 }
 
   /* Base Container */

@@ -6,11 +6,11 @@
    data-svg-id="{{ region.svg_id }}"
    style="--card-index: {{ index|default:0 }};">
   <!-- Кнопка "Подробнее" на серебряной рамке -->
-  <div class="region-card__more" style="color: #333333;">подробнее <span class="region-card__arrow">&rsaquo;</span></div>
+  <div class="region-card__more">подробнее <span class="region-card__arrow">&rsaquo;</span></div>
   
   <!-- Лауреаты -->
   {% if region.laureates %}
-    <div class="region-card__laureates" style="font-family: Alumni sans">{{ region.laureates }}</div>
+    <div class="region-card__laureates">{{ region.laureates }}</div>
   {% endif %}
   
   <!-- Тело карточки (то, что внутри рамки) -->
