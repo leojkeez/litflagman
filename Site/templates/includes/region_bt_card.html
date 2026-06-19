@@ -1,17 +1,12 @@
 {% load static %}
 
 {% with winner_contest=region.contest_main_project.all|dictsortreversed:"year"|first %}
-<a href="{% if winner_contest %}{% url 'contest_detail' year=winner_contest.year %}{% else %}{{ region.region_url|default:'#' }}{% endif %}" 
+<a href="{{ region.region_url|default:'#' }}" 
    class="region-card region-card--silver news-item h-100 js-region-card" 
    data-svg-id="{{ region.svg_id }}"
    style="--card-index: {{ index|default:0 }};">
   <!-- Кнопка "Подробнее" на серебряной рамке -->
   <div class="region-card__more" style="color: #333333;">подробнее <span class="region-card__arrow">&rsaquo;</span></div>
-  
-  <!-- Год победы в правом углу -->
-  {% if winner_contest %}
-    <div class="region-card__year">{{ winner_contest.year }}</div>
-  {% endif %}
   
   <!-- Лауреаты -->
   {% if region.laureates %}
