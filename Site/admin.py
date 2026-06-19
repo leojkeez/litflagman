@@ -3,7 +3,10 @@ from django.urls import reverse
 from django.utils.html import format_html
 from . import views
 from django.urls import path
-from .models import Region, Project, BookTerritory, Club, Photo, Slider, HtmlSnippet, SliderPhoto, News, StaticPage, Contest, File
+from .models import (
+    Region, Project, BookTerritory, Club, Photo, Slider, HtmlSnippet, 
+    SliderPhoto, News, StaticPage, Contest, File, BookTerritoryRegion, ClubRegion
+)
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -128,13 +131,17 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ("region", "year", "is_active")
     search_fields = ("region__title", "year",)
 
+class BookTerritoryRegionInline(admin.TabularInline):
+    model = BookTerritoryRegion
+    extra = 1
+
 @admin.register(BookTerritory)
 class BookTerritoryAdmin(admin.ModelAdmin):
-    filter_horizontal = ('regions',)
     list_display = ('seo_title', 'is_active')
+    inlines = [BookTerritoryRegionInline]
     fieldsets = (
         (None, {
-            'fields': ('regions', 'text', 'is_active')
+            'fields': ('text', 'is_active')
         }),
         ('SEO', {
             'classes': ('collapse',),
@@ -142,13 +149,17 @@ class BookTerritoryAdmin(admin.ModelAdmin):
         }),
     )
 
+class ClubRegionInline(admin.TabularInline):
+    model = ClubRegion
+    extra = 1
+
 @admin.register(Club)
 class ClubAdmin(admin.ModelAdmin):
-    filter_horizontal = ('regions',)
     list_display = ('seo_title', 'is_active')
+    inlines = [ClubRegionInline]
     fieldsets = (
         (None, {
-            'fields': ('regions', 'text', 'is_active')
+            'fields': ('text', 'is_active')
         }),
         ('SEO', {
             'classes': ('collapse',),

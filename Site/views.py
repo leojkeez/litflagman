@@ -608,7 +608,7 @@ def news_detail(request, slug):
 
 def club(request):
     club_instance = Club.objects.filter(is_active=True).prefetch_related(
-        Prefetch('regions', queryset=Region.objects.filter(is_active=True).prefetch_related('contest_main_project'))
+        Prefetch('regions', queryset=Region.objects.filter(is_active=True).order_by('clubregion__order').prefetch_related('contest_main_project'))
     ).first()
     
     # Получаем регионы для интерактивной карты (те, у которых заполнен svg_id)
@@ -622,7 +622,7 @@ def club(request):
 
 def book_territory(request):
     book_territory_instance = BookTerritory.objects.filter(is_active=True).prefetch_related(
-        Prefetch('regions', queryset=Region.objects.filter(is_active=True).prefetch_related('contest_main_project'))
+        Prefetch('regions', queryset=Region.objects.filter(is_active=True).order_by('bookterritoryregion__order').prefetch_related('contest_main_project'))
     ).first()
     
     return render(request, "book-territory.html", {

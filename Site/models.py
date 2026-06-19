@@ -96,7 +96,7 @@ class Project(models.Model):
         verbose_name_plural = "Проекты"
 
 class BookTerritory(models.Model):
-    regions = models.ManyToManyField(Region, verbose_name="Регионы", blank=True)
+    regions = models.ManyToManyField(Region, verbose_name="Регионы", blank=True, through='BookTerritoryRegion')
     text = RichTextField("Текстовое поле", blank=True, default="")
     seo_title = models.CharField("Тайтл СЕО", max_length=255, blank=True, default="")
     seo_description = models.TextField("Дескриптор СЕО", blank=True, default="")
@@ -109,8 +109,18 @@ class BookTerritory(models.Model):
         verbose_name = "Территория книги и чтения"
         verbose_name_plural = "Территория книги и чтения"
 
+class BookTerritoryRegion(models.Model):
+    book_territory = models.ForeignKey(BookTerritory, on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField("Порядок", default=0)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = "Регион в территории книги"
+        verbose_name_plural = "Регионы в территории книги"
+
 class Club(models.Model):
-    regions = models.ManyToManyField(Region, verbose_name="Регионы", blank=True)
+    regions = models.ManyToManyField(Region, verbose_name="Регионы", blank=True, through='ClubRegion')
     text = RichTextField("Текстовое поле", blank=True, default="")
     seo_title = models.CharField("Тайтл СЕО", max_length=255, blank=True, default="")
     seo_description = models.TextField("Дескриптор СЕО", blank=True, default="")
@@ -122,6 +132,16 @@ class Club(models.Model):
     class Meta:
         verbose_name = "Клуб первых"
         verbose_name_plural = "Клубы первых"
+
+class ClubRegion(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField("Порядок", default=0)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = "Регион в клубе"
+        verbose_name_plural = "Регионы в клубе"
 
 class Photo(models.Model):
     image = models.ImageField("Изображение", upload_to='photos/%Y/%m/%d/')
