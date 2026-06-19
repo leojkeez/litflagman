@@ -502,7 +502,17 @@ def contest_detail(request, year=None):
         year = 2025 # Дефолт, если передан некорректный год
         
     contest = get_object_or_404(Contest, year=year)
-    years = list(range(2015, 2029))
+    
+    # Получаем все годы, для которых созданы записи Contest (итоги конкурса)
+    years_with_contests = set(Contest.objects.values_list('year', flat=True))
+    
+    # Формируем список годов с информацией о наличии конкурса
+    years_data = []
+    for y in range(2015, 2029):
+        years_data.append({
+            'year': y,
+            'has_contest': y in years_with_contests
+        })
 
     winner_region = contest.main_project
     winner_project = None
@@ -544,7 +554,7 @@ def contest_detail(request, year=None):
     context = {
         'contest': contest,
         'year': year,
-        'years': years,
+        'years': years_data,
         'winner_region': winner_region,
         'winner_project': winner_project,
         'winner_slider': winner_slider,

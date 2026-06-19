@@ -118,7 +118,7 @@
             <!-- Контейнер для отображения названий годов -->
             <div class="d-flex justify-content-between align-items-center position-relative years-nav-list" style="z-index: 2;">
               {% for item in years_data %}
-                <div class="year-item flex-fill js-year-select {% if item.year == active_year %}active{% endif %}" data-year="{{ item.year }}">
+                <div class="year-item flex-fill {% if item.has_project %}js-year-select{% else %}disabled{% endif %} {% if item.year == active_year %}active{% endif %}" data-year="{{ item.year }}" {% if not item.has_project %}style="opacity: 0.4; cursor: default;"{% endif %}>
                   <span class="year-text {% if item.status == 'winner' %}text-gold{% elif item.status == 'laureate' %}text-silver{% else %}text-normal-year{% endif %}">
                     {{ item.year }}
                   </span>

@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Обработка событий для каждого года
   yearItems.forEach(item => {
+    // Если год заблокирован (нет проекта), не вешаем обработчики
+    if (item.classList.contains('disabled')) return;
+
     // При наведении курсора на год — ползунок бежит за ним (без переключения контента, чтобы не дергалось)
     item.addEventListener('mouseenter', () => {
       moveKnobTo(item);

@@ -13,6 +13,11 @@
     <div class="region-card__year">{{ winner_contest.year }}</div>
   {% endif %}
   
+  <!-- Лауреаты -->
+  {% if region.laureates %}
+    <div class="region-card__laureates" style="font-family: Alumni sans">{{ region.laureates }}</div>
+  {% endif %}
+  
   <!-- Тело карточки (то, что внутри рамки) -->
   <div class="region-card__inner">
     <!-- Фоновое изображение при наведении (анимация появления) -->
@@ -38,3 +43,7 @@
   </div>
 </a>
 {% endwith %}
+
+<style>
+
+</style>

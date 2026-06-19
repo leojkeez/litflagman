@@ -16,6 +16,7 @@ class Region(models.Model):
     title = models.CharField("Название региона", max_length=255, blank=True, null=True)
     region_description = RichTextField("Описание региона")
     most_reading_region = models.TextField("Самый читающий регион")
+    laureates = models.TextField("Лауреаты", blank=True, null=True)  # Новое поле
     region_url = models.CharField(
         "Урл региона", 
         max_length=255, 

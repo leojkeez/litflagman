@@ -87,6 +87,24 @@ class RegionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"region_url": ("title",)}
     list_display = ("title", "svg_id", "is_active",)
     search_fields = ("title", "svg_id",)
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'region_description', 'most_reading_region', 'laureates', 'region_url', 'is_active')
+        }),
+        ('SEO', {
+            'classes': ('collapse',),
+            'fields': ('seo_title', 'seo_description'),
+        }),
+        ('Медиа и слайдеры', {
+            'fields': ('coat_of_arms', 'main_photo', 'default_slider'),
+        }),
+        ('SVG', {
+            'fields': ('svg_id',),
+        }),
+        ('Дополнительно', {
+            'fields': ('right_column_text',),
+        }),
+    )
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         """

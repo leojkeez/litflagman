@@ -15,10 +15,16 @@
   <div class="row justify-content-center mb-5">
     <div class="col-12 text-center">
       <div class="year-list">
-        {% for y in years %}
-          <a href="{% url 'contest_detail' y %}" class="btn-year {% if y == year %}active{% endif %}">
-            {{ y }}
-          </a>
+        {% for y_data in years %}
+          {% if y_data.has_contest %}
+            <a href="{% url 'contest_detail' y_data.year %}" class="btn-year {% if y_data.year == year %}active{% endif %}">
+              {{ y_data.year }}
+            </a>
+          {% else %}
+            <span class="btn-year disabled" style="opacity: 0.5; cursor: default;">
+              {{ y_data.year }}
+            </span>
+          {% endif %}
         {% endfor %}
       </div>
     </div>

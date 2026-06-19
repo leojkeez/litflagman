@@ -1153,7 +1153,7 @@ hr.hr-gradient {
   animation: gold-shimmer 30s ease infinite; /* Постоянный перелив в обычном состоянии */
   animation-delay: calc(var(--card-index, 0) * -1.5s); /* Десинхронизируем перелив рамок разных карточек */
   border-radius: 16px;
-  padding: 5px 5px 25px 5px; /* Внутренний отступ снизу у карточки уменьшен до 25 */
+  padding: 3px 3px 25px 3px; /* Внутренний отступ снизу у карточки уменьшен до 25 */
   display: flex;
   flex-direction: column;
   text-decoration: none !important;
@@ -1361,6 +1361,13 @@ hr.hr-gradient {
   color: #3d2b00;
   z-index: 10;
   pointer-events: none;
+}
+
+.region-card__laureates {
+  position: absolute;
+  bottom: 0px;
+  right: 15px;
+  font-weight: 600;
 }
 
   /* Base Container */
